@@ -109,12 +109,25 @@ class DraftGenerator:
             except Exception:
                 pass
 
-        # Try LLM if enabled and key present
+        # Try LLM if enabled and key present using live PR-04 prompt from prompts/
         if use_llm and self.api_key:
-            passages_block = "\n\n".join(
-                [f"[{s.doc_id}] {s.title}:\n{s.passage}" for s in retrieved_sources[:3]]
-            )
-            prompt = f"""You are a tier-one support drafting assistant for CloudServe Solutions.
+            passages = [{"doc_id": s.doc_id, "title": s.title, "passage": s.passage} for s in retrieved_sources[:3]]
+            try:
+                from src.prompt_loader import prompt_registry
+                prompt = prompt_registry.render_pr04_draft(
+                    ticket_text=ticket_text[:800],
+                    customer_name=customer_name,
+                    channel="support",
+                    retrieved_passages=passages,
+                    intent="support_query",
+                    safety_gate_passed=True,
+                )
+            except Exception:
+                # Fallback template if prompt file is unavailable
+                passages_block = "\n\n".join(
+                    [f"[{s.doc_id}] {s.title}:\n{s.passage}" for s in retrieved_sources[:3]]
+                )
+                prompt = f"""You are a tier-one support drafting assistant for CloudServe Solutions.
 Prepare a clear, helpful response draft grounded exclusively in the approved documentation below.
 
 CUSTOMER TICKET:
@@ -145,7 +158,21 @@ Return only the response text:"""
                 )
                 if resp.status_code == 200:
                     data = resp.json()
-                    draft_content = data["choices"][0]["message"]["content"].strip()
+                    content = data["choices"][0]["message"]["content"].strip()
+                    # Check if response is PR-04 JSON schema
+                    draft_content = content
+                    if content.startswith("{") or "```json" in content:
+                        clean_json = content
+                        if clean_json.startswith("```"):
+                            clean_json = re.sub(r"^```(?:json)?\s*", "", clean_json)
+                            clean_json = re.sub(r"\s*```$", "", clean_json)
+                        try:
+                            parsed_pr04 = json.loads(clean_json)
+                            if "draft_response" in parsed_pr04:
+                                draft_content = parsed_pr04["draft_response"]
+                        except Exception:
+                            pass
+
                     full_draft = f"{self.DISCLOSURE_HEADER}\n\n{draft_content}"
                     result = GeneratedDraft(
                         draft_body=full_draft,

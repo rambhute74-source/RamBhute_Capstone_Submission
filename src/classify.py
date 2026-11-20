@@ -206,9 +206,19 @@ class TicketClassifier:
             except Exception:
                 pass
 
-        # If LLM requested and API key present, attempt OpenRouter call with prompt PR-01
+        # If LLM requested and API key present, load and render live PR-01 prompt from prompts/
         if use_llm and self.api_key:
-            prompt = f"""You are CloudServe's ticket-triage assistant. Classify the support ticket for intent and urgency.
+            try:
+                from src.prompt_loader import prompt_registry
+                prompt = prompt_registry.render_pr01_classifier(
+                    ticket_body=cleaned[:1200],
+                    channel=channel,
+                    urgency="medium",
+                    allowed_intents=VALID_INTENTS,
+                )
+            except Exception:
+                # Fallback to inline template if prompt file is unreadable
+                prompt = f"""You are CloudServe's ticket-triage assistant. Classify the support ticket for intent and urgency.
 
 Ticket Channel: {channel}
 Ticket Content:
@@ -222,16 +232,13 @@ high, medium, low
 
 Return strictly valid JSON with no markdown wrapping:
 {{
-  "concise_summary": "1-2 sentence issue summary",
+  "summary": "1-2 sentence issue summary",
   "proposed_intent": "one_of_allowed_intents",
-  "intent_confidence": 0.95,
-  "urgency": "high|medium|low",
-  "urgency_confidence": 0.90,
-  "alternatives": [
-    {{"intent": "second_choice", "confidence": 0.05}}
-  ],
-  "uncertainty_flag": false,
-  "rationale": "Reason for classification"
+  "supplied_urgency": "high|medium|low",
+  "uncertainty_state": "clear|uncertain|ambiguous",
+  "needs_human": false,
+  "reason_codes": [],
+  "missing_information": []
 }}"""
 
             try:
@@ -259,17 +266,29 @@ Return strictly valid JSON with no markdown wrapping:
                         # Fallback to local
                         return self.classify_local(cleaned)
 
-                    intent_conf = float(parsed.get("intent_confidence", 0.85))
-                    urgency = parsed.get("urgency", "medium").lower()
+                    # Determine uncertainty and confidence according to PR-01 specification
+                    needs_human = bool(parsed.get("needs_human", False))
+                    uncertainty_state = parsed.get("uncertainty_state", "clear")
+                    raw_conf = parsed.get("intent_confidence")
+                    if raw_conf is not None:
+                        intent_conf = float(raw_conf)
+                    elif needs_human or uncertainty_state != "clear":
+                        intent_conf = 0.65
+                    else:
+                        intent_conf = 0.95
+
+                    urgency = str(parsed.get("supplied_urgency") or parsed.get("urgency") or "medium").lower()
                     if urgency not in {"high", "medium", "low"}:
                         urgency = "medium"
 
+                    summary = parsed.get("summary") or parsed.get("concise_summary") or cleaned[:100]
+
                     result = ClassificationResult(
-                        concise_summary=parsed.get("concise_summary", cleaned[:100]),
+                        concise_summary=summary,
                         intent=intent,
                         intent_confidence=round(intent_conf, 4),
                         urgency=urgency,
-                        urgency_confidence=round(float(parsed.get("urgency_confidence", 0.85)), 4),
+                        urgency_confidence=round(float(parsed.get("urgency_confidence", 0.90)), 4),
                         alternatives=[
                             Alternative(
                                 intent=a.get("intent", "unclear_request"),
@@ -277,10 +296,11 @@ Return strictly valid JSON with no markdown wrapping:
                             )
                             for a in parsed.get("alternatives", [])
                         ],
-                        uncertainty_flag=bool(parsed.get("uncertainty_flag", False))
+                        uncertainty_flag=needs_human
+                        or uncertainty_state != "clear"
                         or intent_conf < 0.80
                         or intent in PROTECTED_INTENTS,
-                        rationale=parsed.get("rationale", "LLM triage analysis"),
+                        rationale=f"PR-01 prompt classification ({uncertainty_state})",
                         model_used=self.model_name,
                     )
                     self.cache[cache_key] = result.model_dump()

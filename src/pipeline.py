@@ -16,6 +16,7 @@ from src.ingest import ingest_ticket, NormalizedTicket
 from src.logging_store import DecisionLogger, DecisionLogRecord
 from src.retrieve import DocRetriever, RetrievedSource
 from src.route import Router, RoutingDecision, EscalationBrief
+from src.prompt_loader import prompt_registry
 
 
 class TicketProcessingResult(BaseModel):
@@ -142,7 +143,7 @@ class SupportPipeline:
                 action_taken=decision.action,
                 reason=decision.reason,
                 guardrail_results=guard_summary,
-                prompt_version="PR-03 v1.0",
+                prompt_version=prompt_registry.get_prompt_version("PR-03"),
                 requirement_ids=["FR-01", "FR-03", "FR-04", "FR-08"],
             )
             decision_id = self.logger.log_decision(log_record)
