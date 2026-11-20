@@ -5,19 +5,33 @@ Provides endpoints for single ticket processing, batch processing, decision audi
 health monitoring, and operational metrics.
 """
 
+from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
+import os
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Response
 from pydantic import BaseModel
 from src.logging_store import DecisionLogger
 from src.pipeline import SupportPipeline, TicketProcessingResult
+from src.monitoring import get_latest_metrics, CONTENT_TYPE_LATEST, start_metrics_server
 
 load_dotenv()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start Prometheus scrape server on port 8001 (Setup Guide Section 06) if enabled
+    if os.getenv("START_METRICS_SERVER", "false").lower() in {"true", "1", "yes"}:
+        metrics_port = int(os.getenv("METRICS_PORT", "8001"))
+        start_metrics_server(metrics_port)
+    yield
+
+
 app = FastAPI(
     title="CloudServe Intelligent Customer Support API",
-    description="Automated triage, retrieval, grounding, guardrails, and decision logging.",
+    description="Automated triage, retrieval, grounding, guardrails, decision logging, and Prometheus monitoring.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 pipeline = SupportPipeline()
@@ -82,6 +96,12 @@ def get_decisions(
         "total_decisions": logger.count_decisions(),
         "database_path": logger.db_path,
     }
+
+
+@app.get("/metrics")
+def get_prometheus_metrics():
+    """Expose Prometheus metrics for scraping (Setup Guide Section 06)."""
+    return Response(content=get_latest_metrics(), media_type=CONTENT_TYPE_LATEST)
 
 
 if __name__ == "__main__":

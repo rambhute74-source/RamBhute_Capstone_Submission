@@ -19,6 +19,13 @@ from src.logging_store import DecisionLogger, DecisionLogRecord
 from src.retrieve import DocRetriever, RetrievedSource
 from src.route import Router, RoutingDecision, EscalationBrief
 from src.prompt_loader import prompt_registry
+from src.monitoring import (
+    TICKETS_PROCESSED,
+    RESPONSE_LATENCY,
+    GUARDRAIL_BLOCKS,
+    CONFIDENCE_SCORES,
+    RETRIEVAL_SCORES,
+)
 
 
 class TicketProcessingResult(BaseModel):
@@ -95,11 +102,14 @@ class SupportPipeline:
             inbound_guard: GuardrailCheckResult = self.guardrails.validate_inbound_ticket(
                 ticket.cleaned_text
             )
+            if inbound_guard.blocked:
+                GUARDRAIL_BLOCKS.labels(guardrail=inbound_guard.trigger_type or "inbound_guard").inc()
 
             # 3. Classification
             classification: ClassificationResult = self.classifier.classify(
                 ticket.cleaned_text, channel=ticket.channel, use_llm=use_llm
             )
+            CONFIDENCE_SCORES.observe(classification.intent_confidence)
 
             # 4. Retrieval
             retrieved_sources: List[RetrievedSource] = []
@@ -107,6 +117,8 @@ class SupportPipeline:
                 retrieved_sources = self.retriever.retrieve(
                     ticket.cleaned_text, top_k=self.top_k, min_score=0.08
                 )
+                for s in retrieved_sources:
+                    RETRIEVAL_SCORES.observe(s.score)
 
             # 5. Must not auto respond check from labels (if present)
             must_not_auto = False
@@ -130,6 +142,8 @@ class SupportPipeline:
                 outbound_guard = self.guardrails.validate_outbound_draft(
                     draft.draft_body, retrieved_passages=passages
                 )
+                if outbound_guard and outbound_guard.blocked:
+                    GUARDRAIL_BLOCKS.labels(guardrail=outbound_guard.trigger_type or "outbound_guard").inc()
 
             # 8. Deterministic Routing Decision
             decision: RoutingDecision = self.router.route(
@@ -177,6 +191,10 @@ class SupportPipeline:
             final_draft_text = draft.draft_body if (draft and decision.action == "auto_respond") else None
             sources_cited = [s.doc_id for s in retrieved_sources] if decision.action == "auto_respond" else []
 
+            # Record Prometheus telemetry metrics (Setup Guide Section 06)
+            RESPONSE_LATENCY.observe(latency)
+            TICKETS_PROCESSED.labels(channel=ticket.channel, outcome=decision.action).inc()
+
             return TicketProcessingResult(
                 ticket_id=ticket.ticket_id,
                 channel=ticket.channel,
@@ -199,7 +217,12 @@ class SupportPipeline:
             # Acceptance Criterion A11: Must handle any failure without crashing
             latency = round(time.time() - start_time, 4)
             tid = str(raw_ticket.get("ticket_id") or "ERR-TICKET")
+            ch = str(raw_ticket.get("channel") or "email")
             fallback_reason = f"Graceful degradation on pipeline exception: {str(e)}"
+            
+            # Record Prometheus telemetry metrics on exception
+            RESPONSE_LATENCY.observe(latency)
+            TICKETS_PROCESSED.labels(channel=ch, outcome="escalate").inc()
             
             # Log fallback decision
             fallback_record = DecisionLogRecord(
