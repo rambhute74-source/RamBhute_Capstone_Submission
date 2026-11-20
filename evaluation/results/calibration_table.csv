@@ -1,0 +1,4 @@
+band,count,stated_confidence,observed_accuracy,difference
+0.4-0.6,2,0.5021,1.0,-0.4979
+0.6-0.8,8,0.7538,1.0,-0.2462
+0.8-1.0,490,0.8593,1.0,-0.1407
