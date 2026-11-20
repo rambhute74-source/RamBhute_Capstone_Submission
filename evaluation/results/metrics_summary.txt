@@ -2,9 +2,9 @@
 CLOUDSERVE AI CUSTOMER SUPPORT - EVALUATION METRICS REPORT
 ============================================================
 
-Evaluation Date: 2026-11-20T11:37:49.695653+00:00
+Evaluation Date: 2026-11-20T11:46:03.840091+00:00
 Tickets Processed: 500
-Total Run Time: 79.6s
+Total Run Time: 53.18s
 
 --- VOLUME ---
 Answered Automatically: 351 (70.2%)
@@ -14,7 +14,7 @@ Blocked by Guardrails:  0
 --- BUSINESS OUTCOMES ---
 First Contact Resolution: 70.2% (Target: >=60%, Baseline: 42%)
 Escalation Rate:          29.8%
-Median Latency:           0.0703s (P95: 0.3078s)
+Median Latency:           0.0674s (P95: 0.2001s)
 
 --- TECHNICAL PERFORMANCE ---
 Intent Classification Accuracy: 100.0%
