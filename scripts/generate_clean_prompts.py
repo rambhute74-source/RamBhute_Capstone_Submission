@@ -216,23 +216,24 @@ for item in PROMPTS:
     md_content += "\n".join(formatted_body).strip() + "\n"
     
     # Save target files
-    # Target 1: Exact original path in subfolder (e.g. prompts/build/PR-01_...txt)
+    # Target 1: Exact path in dedicated subfolder (e.g. prompts/build/PR-01_...txt)
     target_sub_txt = os.path.join(base_dir, item["subfolder"], item["long_filename"])
     with open(target_sub_txt, "w", encoding="utf-8") as f:
         f.write(plain_content)
         
-    # Target 2: Root copy of long_filename (for flat lookup / backward compat)
-    target_root_txt = os.path.join(base_dir, item["long_filename"])
-    with open(target_root_txt, "w", encoding="utf-8") as f:
-        f.write(plain_content)
-        
-    # Target 3: Short named .md file in subfolder
+    # Target 2: Short named .md file in subfolder
     target_sub_md = os.path.join(base_dir, item["subfolder"], item["short_filename"])
     with open(target_sub_md, "w", encoding="utf-8") as f:
         f.write(md_content)
         
-    # Target 4: If category is review, also place in review/
+    # Target 3: If category is review, also place .txt and .md in review/
     if item["category"] == "review":
+        target_rev_md = os.path.join(base_dir, "review", item["short_filename"])
+        with open(target_rev_md, "w", encoding="utf-8") as f:
+            f.write(md_content)
+        target_rev_txt = os.path.join(base_dir, "review", item["long_filename"])
+        with open(target_rev_txt, "w", encoding="utf-8") as f:
+            f.write(plain_content)
         target_rev_md = os.path.join(base_dir, "review", item["short_filename"])
         with open(target_rev_md, "w", encoding="utf-8") as f:
             f.write(md_content)

@@ -22,21 +22,15 @@ PROMPT_FILE_MAP = {
     "PR-04": os.path.join(PROMPTS_ROOT, "build", "PR-04_source_grounded_response_draft_generator.txt"),
     "PR-05": os.path.join(PROMPTS_ROOT, "build", "PR-05_context_rich_escalation_handoff_builder.txt"),
     "PR-06": os.path.join(PROMPTS_ROOT, "build", "PR-06_support_outcome_and_operational_event_summariser.txt"),
-    "RV-01": os.path.join(PROMPTS_ROOT, "review", "RV-01_compliance_reviewer.md"),
+    "RV-01": os.path.join(PROMPTS_ROOT, "review", "RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt"),
     "EV-01": os.path.join(PROMPTS_ROOT, "evaluation", "EV-01_grounded_answer_and_citation_quality_evaluator.txt"),
     "EV-02": os.path.join(PROMPTS_ROOT, "evaluation", "EV-02_unsupported_claim_and_safety_boundary_evaluator.txt"),
     "EV-03": os.path.join(PROMPTS_ROOT, "evaluation", "EV-03_segmented_outcome_and_fairness_evaluator.txt"),
 }
 
-# Fallback root paths if subfolders are organized differently
-FALLBACK_ROOT_MAP = {
-    k: os.path.join(PROMPTS_ROOT, os.path.basename(v))
-    for k, v in PROMPT_FILE_MAP.items()
-}
-
 
 class PromptRegistry:
-    """Manages loading, parsing, and rendering versioned prompt templates from the filesystem."""
+    """Manages loading, parsing, and rendering versioned prompt templates from dedicated subdirectories."""
 
     def __init__(self, prompts_dir: Optional[str] = None):
         self.prompts_dir = prompts_dir or PROMPTS_ROOT
@@ -44,19 +38,18 @@ class PromptRegistry:
         self._metadata_cache: Dict[str, Dict[str, str]] = {}
 
     def get_prompt_path(self, prompt_id: str) -> str:
-        """Resolve absolute file path for a prompt ID."""
+        """Resolve absolute file path for a prompt ID from its dedicated subfolder."""
         primary = PROMPT_FILE_MAP.get(prompt_id)
         if primary and os.path.exists(primary):
             return primary
-        fallback = FALLBACK_ROOT_MAP.get(prompt_id)
-        if fallback and os.path.exists(fallback):
-            return fallback
-        # Search anywhere in prompts_dir
-        for root, _, files in os.walk(self.prompts_dir):
-            for f in files:
-                if f.startswith(prompt_id):
-                    return os.path.join(root, f)
-        raise FileNotFoundError(f"Prompt file for '{prompt_id}' not found in {self.prompts_dir}")
+        # Search dedicated subdirectories only (never root)
+        for sub in ["specification", "build", "evaluation", "review"]:
+            sub_path = os.path.join(self.prompts_dir, sub)
+            if os.path.isdir(sub_path):
+                for f in os.listdir(sub_path):
+                    if f.startswith(prompt_id):
+                        return os.path.join(sub_path, f)
+        raise FileNotFoundError(f"Prompt file for '{prompt_id}' not found in dedicated subdirectories of {self.prompts_dir}")
 
     def load_prompt_file(self, prompt_id: str) -> str:
         """Load raw prompt file content from disk with caching."""

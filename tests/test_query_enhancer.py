@@ -15,6 +15,7 @@ def test_pr02b_prompt_exists_in_prompts_folder():
     """Verify that PR-02b prompt file exists in prompts/build/ and has real content."""
     prompt_path = prompt_registry.get_prompt_path("PR-02b")
     assert os.path.exists(prompt_path), f"PR-02b prompt file not found at {prompt_path}"
+    assert "build" in prompt_path, f"PR-02b must be in dedicated 'build' subfolder: {prompt_path}"
     with open(prompt_path, "r", encoding="utf-8") as f:
         content = f.read()
     assert "PR-02b" in content

@@ -24,7 +24,7 @@ Welcome to the CloudServe Prompt Engineering & Template Registry. All prompts ar
 | `PR-04` | **Source-Grounded Response Draft Generator** | `` | [PR-04_source_grounded_response_draft_generator.txt](build/PR-04_source_grounded_response_draft_generator.txt) <br> *([View Markdown](build/PR-04_draft_generator.md))* | Build |
 | `PR-05` | **Context-Rich Escalation Handoff Builder** | `FR-05` | [PR-05_context_rich_escalation_handoff_builder.txt](build/PR-05_context_rich_escalation_handoff_builder.txt) <br> *([View Markdown](build/PR-05_escalation_handoff.md))* | Build |
 | `PR-06` | **Support Outcome and Operational Event Summariser** | `FR-07, FR-08` | [PR-06_support_outcome_and_operational_event_summariser.txt](build/PR-06_support_outcome_and_operational_event_summariser.txt) <br> *([View Markdown](build/PR-06_outcome_summariser.md))* | Build |
-| `RV-01` | **Requirement, Prompt and Implementation Compliance Reviewer** | `FR-01–FR-08 and applicable NFRs` | [RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt](evaluation/RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt) <br> *([View Markdown](evaluation/RV-01_compliance_reviewer.md))* | Review |
+| `RV-01` | **Requirement, Prompt and Implementation Compliance Reviewer** | `FR-01–FR-08 and applicable NFRs` | [RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt](review/RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt) <br> *([View Markdown](review/RV-01_compliance_reviewer.md))* | Review |
 | `EV-01` | **Grounded Answer and Citation Quality Evaluator** | `FR-02, FR-03, FR-06; NFR-03, NFR-05` | [EV-01_grounded_answer_and_citation_quality_evaluator.txt](evaluation/EV-01_grounded_answer_and_citation_quality_evaluator.txt) <br> *([View Markdown](evaluation/EV-01_grounding_evaluator.md))* | Evaluation |
 | `EV-02` | **Unsupported-Claim and Safety Boundary Evaluator** | `FR-03, FR-04, FR-06; NFR-03` | [EV-02_unsupported_claim_and_safety_boundary_evaluator.txt](evaluation/EV-02_unsupported_claim_and_safety_boundary_evaluator.txt) <br> *([View Markdown](evaluation/EV-02_safety_evaluator.md))* | Evaluation |
 | `EV-03` | **Segmented Outcome and Fairness Evaluator** | `FR-07, FR-08; NFR-06` | [EV-03_segmented_outcome_and_fairness_evaluator.txt](evaluation/EV-03_segmented_outcome_and_fairness_evaluator.txt) <br> *([View Markdown](evaluation/EV-03_fairness_evaluator.md))* | Evaluation |
@@ -65,7 +65,8 @@ prompts/
 │   ├── EV-03_fairness_evaluator.md
 │   ├── RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt
 │   └── RV-01_compliance_reviewer.md
-└── review/                        # Dedicated review category mirror
+└── review/                        # RV-01 (Review prompt for compliance against requirements)
+    ├── RV-01_requirement__prompt_and_implementation_compliance_reviewer.txt
     └── RV-01_compliance_reviewer.md
 ```
 

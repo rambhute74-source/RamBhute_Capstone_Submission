@@ -14,14 +14,23 @@ from src.pipeline import SupportPipeline
 
 
 def test_prompt_files_exist_and_non_empty():
-    """Verify that all 12 prompt registry files exist on disk with real content."""
+    """Verify that all 13 prompt registry files exist on disk in their dedicated folders."""
     for pid, expected_path in PROMPT_FILE_MAP.items():
         assert os.path.exists(expected_path), f"Prompt file missing for {pid} at {expected_path}"
+        # Assert path is inside dedicated subdirectory
+        assert any(sub in expected_path for sub in ["specification", "build", "evaluation", "review"])
         with open(expected_path, "r", encoding="utf-8") as f:
             content = f.read()
         assert len(content.strip()) > 300, f"Prompt file {pid} has insufficient content ({len(content)} chars)"
         assert "ROLE" in content, f"Prompt {pid} missing ROLE section"
         assert "TASK" in content, f"Prompt {pid} missing TASK section"
+
+
+def test_no_loose_prompt_files_in_root():
+    """Verify that no prompt text files exist loose in prompts root folder (must be in subdirectories)."""
+    prompts_root = prompt_registry.prompts_dir
+    loose_txt_files = [f for f in os.listdir(prompts_root) if f.endswith(".txt")]
+    assert len(loose_txt_files) == 0, f"Found loose prompt files in root: {loose_txt_files}"
 
 
 def test_prompt_registry_renders_pr01_classifier():
