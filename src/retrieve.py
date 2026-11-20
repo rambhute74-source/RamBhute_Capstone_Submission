@@ -13,11 +13,17 @@ import argparse
 import json
 import os
 import re
+import sys
 from typing import Any, Dict, List, Optional
 import numpy as np
 from pydantic import BaseModel
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.query_enhancer import QueryEnhancer, EnhancedQuery
 
 
 class RetrievedSource(BaseModel):
@@ -63,6 +69,7 @@ class DocRetriever:
         self.vectorizer: Optional[TfidfVectorizer] = None
         self.chunk_vectors = None
         self.chroma_store = None
+        self.enhancer = QueryEnhancer()
 
         # Always initialize deterministic TF-IDF baseline
         self._load_and_index_tfidf()
@@ -204,11 +211,18 @@ class DocRetriever:
         return sources
 
     def retrieve(
-        self, query: str, top_k: int = 5, min_score: Optional[float] = None
+        self,
+        query: str,
+        top_k: int = 5,
+        min_score: Optional[float] = None,
+        channel: str = "email",
+        intent: str = "general_inquiry",
+        enhance_query: bool = False,
     ) -> List[RetrievedSource]:
         """
         Retrieves top_k passages relevant to the query.
         Uses Chroma dense embeddings if active, with automatic TF-IDF fallback.
+        Supports query enhancement (PR-02b) when enhance_query=True.
         Returns empty list if top score is below threshold (fail-closed).
         """
         threshold = min_score if min_score is not None else self.min_threshold
@@ -216,10 +230,19 @@ class DocRetriever:
         if not q:
             return []
 
+        # Optional query enhancement using PR-02b
+        if enhance_query and self.enhancer is not None:
+            enhanced = self.enhancer.enhance(q, channel=channel, intent=intent)
+            dense_q = enhanced.dense_semantic_query
+            sparse_q = enhanced.sparse_keyword_query
+        else:
+            dense_q = q
+            sparse_q = q
+
         # 1. Try Chroma semantic retrieval if enabled
         if self.use_chroma and self.chroma_store is not None:
             try:
-                chroma_results = self._retrieve_chroma(q, top_k=top_k, min_score=threshold)
+                chroma_results = self._retrieve_chroma(dense_q, top_k=top_k, min_score=threshold)
                 if chroma_results:
                     return chroma_results
             except Exception:
@@ -229,7 +252,7 @@ class DocRetriever:
         if self.chunk_vectors is None or self.vectorizer is None:
             return []
 
-        q_vec = self.vectorizer.transform([q])
+        q_vec = self.vectorizer.transform([sparse_q])
         sims = cosine_similarity(q_vec, self.chunk_vectors)[0]
 
         top_indices = np.argsort(sims)[::-1]
@@ -274,13 +297,14 @@ if __name__ == "__main__":
     parser.add_argument("--query", type=str, default="Cannot reset password with MFA", help="Search query")
     parser.add_argument("--mode", type=str, choices=["chroma", "tfidf"], default="chroma", help="Engine mode")
     parser.add_argument("--top_k", type=int, default=3, help="Number of results")
+    parser.add_argument("--enhance", action="store_true", help="Enable PR-02b query enhancement")
     args = parser.parse_args()
 
     use_chroma = args.mode == "chroma"
     retriever = DocRetriever(use_chroma=use_chroma)
-    print(f"\n--- Running retrieval with mode: {args.mode.upper()} ---")
+    print(f"\n--- Running retrieval with mode: {args.mode.upper()} (Query Enhancement: {args.enhance}) ---")
     print(f"Query: '{args.query}'\n")
-    matches = retriever.retrieve(args.query, top_k=args.top_k)
+    matches = retriever.retrieve(args.query, top_k=args.top_k, enhance_query=args.enhance)
     for i, m in enumerate(matches, 1):
         print(f"{i}. [{m.score:.4f}] {m.doc_id} - {m.title}")
         print(f"   Passage: {m.passage[:120].strip()}...\n")

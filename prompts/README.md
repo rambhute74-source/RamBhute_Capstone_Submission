@@ -19,6 +19,7 @@ Welcome to the CloudServe Prompt Engineering & Template Registry. All prompts ar
 | `SP-02` | **Acceptance-Criteria and Test-Scenario Generator** | `FR-01–FR-08` | [SP-02_acceptance_criteria_and_test_scenario_generator.txt](specification/SP-02_acceptance_criteria_and_test_scenario_generator.txt) <br> *([View Markdown](specification/SP-02_test_scenario_generator.md))* | Specification |
 | `PR-01` | **Ticket Intent, Urgency Context and Uncertainty Classifier** | `FR-01` | [PR-01_ticket_intent__urgency_context_and_uncertainty_classifier.txt](build/PR-01_ticket_intent__urgency_context_and_uncertainty_classifier.txt) <br> *([View Markdown](build/PR-01_ticket_classifier.md))* | Build |
 | `PR-02` | **Approved Knowledge-Base Retrieval and Evidence Framing** | `FR-02, FR-06` | [PR-02_approved_knowledge_base_retrieval_and_evidence_framing.txt](build/PR-02_approved_knowledge_base_retrieval_and_evidence_framing.txt) <br> *([View Markdown](build/PR-02_knowledge_retriever.md))* | Build |
+| `PR-02b` | **Search Query Reformulation and Technical Expansion Assistant** | `FR-02, FR-06` | [PR-02b_query_enhancer.txt](build/PR-02b_query_enhancer.txt) <br> *([View Markdown](build/PR-02b_query_enhancer.md))* | Build |
 | `PR-03` | **Safety Gate and Human-Routing Decision** | `FR-04` | [PR-03_safety_gate_and_human_routing_decision.txt](build/PR-03_safety_gate_and_human_routing_decision.txt) <br> *([View Markdown](build/PR-03_safety_gate_router.md))* | Build |
 | `PR-04` | **Source-Grounded Response Draft Generator** | `` | [PR-04_source_grounded_response_draft_generator.txt](build/PR-04_source_grounded_response_draft_generator.txt) <br> *([View Markdown](build/PR-04_draft_generator.md))* | Build |
 | `PR-05` | **Context-Rich Escalation Handoff Builder** | `FR-05` | [PR-05_context_rich_escalation_handoff_builder.txt](build/PR-05_context_rich_escalation_handoff_builder.txt) <br> *([View Markdown](build/PR-05_escalation_handoff.md))* | Build |
@@ -45,6 +46,8 @@ prompts/
 │   ├── PR-01_ticket_classifier.md
 │   ├── PR-02_approved_knowledge_base_retrieval_and_evidence_framing.txt
 │   ├── PR-02_knowledge_retriever.md
+│   ├── PR-02b_query_enhancer.txt
+│   ├── PR-02b_query_enhancer.md
 │   ├── PR-03_safety_gate_and_human_routing_decision.txt
 │   ├── PR-03_safety_gate_router.md
 │   ├── PR-04_source_grounded_response_draft_generator.txt

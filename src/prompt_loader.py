@@ -17,6 +17,7 @@ PROMPT_FILE_MAP = {
     "SP-02": os.path.join(PROMPTS_ROOT, "specification", "SP-02_acceptance_criteria_and_test_scenario_generator.txt"),
     "PR-01": os.path.join(PROMPTS_ROOT, "build", "PR-01_ticket_intent__urgency_context_and_uncertainty_classifier.txt"),
     "PR-02": os.path.join(PROMPTS_ROOT, "build", "PR-02_approved_knowledge_base_retrieval_and_evidence_framing.txt"),
+    "PR-02b": os.path.join(PROMPTS_ROOT, "build", "PR-02b_query_enhancer.txt"),
     "PR-03": os.path.join(PROMPTS_ROOT, "build", "PR-03_safety_gate_and_human_routing_decision.txt"),
     "PR-04": os.path.join(PROMPTS_ROOT, "build", "PR-04_source_grounded_response_draft_generator.txt"),
     "PR-05": os.path.join(PROMPTS_ROOT, "build", "PR-05_context_rich_escalation_handoff_builder.txt"),
@@ -111,6 +112,19 @@ class PromptRegistry:
         rendered = rendered.replace("{{SUPPLIED_URGENCY}}", urgency)
         rendered = rendered.replace("{{ALLOWED_INTENTS}}", intents_list)
         rendered = rendered.replace("{{INTENT_TAXONOMY}}", intents_list)
+        return rendered
+
+    def render_pr02b_query_enhancer(
+        self,
+        ticket_body: str,
+        channel: str = "email",
+        detected_intent: str = "general_inquiry",
+    ) -> str:
+        """Render PR-02b Search query reformulation prompt from prompts/build/PR-02b_query_enhancer.txt"""
+        template = self.get_prompt_text("PR-02b")
+        rendered = template.replace("{{TICKET_TEXT}}", ticket_body.strip())
+        rendered = rendered.replace("{{TICKET_CHANNEL}}", channel)
+        rendered = rendered.replace("{{DETECTED_INTENT}}", detected_intent)
         return rendered
 
     def render_pr04_draft(
