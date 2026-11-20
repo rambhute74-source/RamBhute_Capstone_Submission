@@ -1,68 +1,56 @@
-# EV-03 - Segmented outcome and fairness evaluator
+# EV-03 - Segmented Outcome and Fairness Evaluator
 
-ROLEYou are an evaluation analyst reviewing CloudServe support outcomes for possible segment-level differences.TASKReview precomputed comparable-cohort metrics by customer tier, region and language fluency. Identify patterns that require investigation without overstating evidence.INPUTS<cohort_and_time_window>{{COHORT_DEFINITION}}</cohort_and_time_window><segment_metrics>{{PRECOMPUTED_SEGMENT_METRICS}}</segment_metrics><sample_sizes>{{SEGMENT_DENOMINATORS}}</sample_sizes><approved_guardrails>{{APPROVED_STATISTICAL_AND_OPERATIONAL_GUARDRAILS_OR_EMPTY}}</approved_guardrails><event_coverage>{{AVAILABLE_FIELDS_AND_MISSING_EVENTS}}</event_coverage>RULES1. Use supplied calculations and denominators; do not invent metrics.2. Compare FCR, CSAT, escalation, repeat contacts and answer/citation quality only where available.3. Keep enterprise results visible; do not let aggregate metrics hide deterioration.4. Do not assume non-fluent customers have worse outcomes. Stage One sample: non-fluent FCR 45.8%, CSAT 3.04; fluent FCR 43.2%, CSAT 2.95.5. Do not claim statistical significance unless the supplied analysis establishes it and sample-size rules are approved.6. Distinguish observed difference, possible explanation and evidence needed.7. If guardrails or sample sizes are not approved, state that the conclusion is provisional.8. Do not treat resolution time as first-response time.OUTPUTReturn valid JSON only:{"segment_comparison": [],"sample_size_warnings": [],"observed_gaps": [],"enterprise_guardrail_status": "within_guardrail|breach|not_assessable","fluency_interpretation": "","data_limitations": [],"follow_up_actions": [],"overall_conclusion": "no_material_gap_observed|investigate_further|guardrail_breach|not_assessable"}
-3   Section three: what makes a prompt worth keeping
-The register above records your prompts. This section is about whether they are any good. Work through the checklist for each build prompt before you rely on it.
-Check
-What you are looking for
-Does it state the role and the task separately?
-A prompt that mixes who the model is with what it should do tends to produce inconsistent output.
-Are the inputs clearly delimited?
-Ticket text and instructions must be distinguishable, or a customer can accidentally instruct your system.
-Is the output format specified exactly?
-If you are parsing the response, the format is part of the contract and must be stated.
-Does it say what to do when the answer is not known?
-Without this instruction the model will invent something, because inventing something is what it does.
-Are the examples representative?
-Examples drawn only from easy cases teach the model that every case is easy.
-Does it forbid what must never happen?
-Constraints stated positively are followed more reliably than constraints implied by omission.
-The injection problem you must handle
-Your system reads text written by customers and passes it to a model. A customer can write text that looks like an instruction. If your prompt does not clearly separate the ticket content from your own instructions, you have built a system that strangers can reprogram. Record in the register how each build prompt defends against this.
-4   Section four: traceability check
-Complete this table before you move to the sprint plan. It is the evidence that your prompts descend from your requirements rather than from convenience.
-Requirement ID
-Specification written?
-Prompts covering it
-Test case identifier
-Gaps
-FR-01
-Yes — SP-01, SP-02
-PR-01, RV-01, EV-03
-T-FR01-01 (summary/intent); T-FR01-02 (ambiguous); T-FR01-03 (urgency preserved)
-Intent taxonomy/unknown label and representative fixtures to confirm.
-FR-02
-Yes — SP-01, SP-02
-PR-02, PR-04, RV-01, EV-01
-T-FR02-01 (expected_doc_ids retrieval); T-FR02-02 (no source); T-FR02-03 (invalid article ID)
-Confirm approved corpus snapshot, article status and retrieval benchmark protocol.
-FR-03
-Yes — SP-01, SP-02
-PR-04, PR-03, RV-01, EV-01, EV-02
-T-FR03-01 (grounded draft); T-FR03-02 (machine disclosure); T-FR03-03 (human approval/no send); T-FR03-04 (no source abstention)
-UI and send workflow must enforce human approval outside model output.
-FR-04
-Yes — SP-01, SP-02
-PR-03, PR-04, RV-01, EV-02
-T-FR04-01 (must_not_auto_respond); T-FR04-02 (143 not-answerable); T-FR04-03 (protected categories); T-FR04-04 (ambiguous fail-closed)
-Final routing matrix requires Daniel/Marcus and Security/Compliance approval.
-FR-05
-Yes — SP-01, SP-02
-PR-05, RV-01
-T-FR05-01 (complete handoff); T-FR05-02 (missing checks labelled not recorded)
-Structured agent-action capture needed; absent actions cannot be reconstructed.
-FR-06
-Yes — SP-01, SP-02
-PR-02, PR-04, RV-01, EV-01, EV-02
-T-FR06-01 (approved article only); T-FR06-02 (private snippet excluded); T-FR06-03 (reference-answer constraint)
-Documentation owner confirms approved-source allow-list and reference-answer mappings.
-FR-07
-Yes — SP-01, SP-02
-PR-06, RV-01, EV-03
-T-FR07-01 (overall metrics); T-FR07-02 (tier/region/fluency segments); T-FR07-03 (denominators and missing timestamps)
-Metric definitions, cohort windows and segment guardrails require owner agreement.
-FR-08
-Yes — SP-01, SP-02
-PR-06, RV-01, EV-03
-T-FR08-01 (event completeness); T-FR08-02 (draft disposition); T-FR08-03 (privacy/retention gate)
-Event schema, access, retention and deletion require approval before production.
+Metadata:
+- ID: EV-03
+- Category: Evaluation
+- Serves: FR-07, FR-08; NFR-06
+- Version: 1.0
+- Model: Configured OpenRouter / Fallback Engine (Model-Agnostic)
+
+--- PROMPT TEXT ---
+
+ROLE
+You are an evaluation analyst reviewing CloudServe support outcomes for possible segment-level differences.
+
+TASK
+Review precomputed comparable-cohort metrics by customer tier, region and language fluency. Identify patterns that require investigation without overstating evidence.
+
+INPUTS
+<cohort_and_time_window>
+{{COHORT_DEFINITION}}
+</cohort_and_time_window>
+<segment_metrics>
+{{PRECOMPUTED_SEGMENT_METRICS}}
+</segment_metrics>
+<sample_sizes>
+{{SEGMENT_DENOMINATORS}}
+</sample_sizes>
+<approved_guardrails>
+{{APPROVED_STATISTICAL_AND_OPERATIONAL_GUARDRAILS_OR_EMPTY}}
+</approved_guardrails>
+<event_coverage>
+{{AVAILABLE_FIELDS_AND_MISSING_EVENTS}}
+</event_coverage>
+
+RULES
+1. Use supplied calculations and denominators; do not invent metrics.
+2. Compare FCR, CSAT, escalation, repeat contacts and answer/citation quality only where available.
+3. Keep enterprise results visible; do not let aggregate metrics hide deterioration.
+4. Do not assume non-fluent customers have worse outcomes. Stage One sample: non-fluent FCR 45.8%, CSAT 3.04; fluent FCR 43.2%, CSAT 2.95.
+5. Do not claim statistical significance unless the supplied analysis establishes it and sample-size rules are approved.
+6. Distinguish observed difference, possible explanation and evidence needed.
+7. If guardrails or sample sizes are not approved, state that the conclusion is provisional.
+8. Do not treat resolution time as first-response time.
+
+OUTPUT
+Return valid JSON only:
+{
+"segment_comparison": [],
+"sample_size_warnings": [],
+"observed_gaps": [],
+"enterprise_guardrail_status": "within_guardrail|breach|not_assessable",
+"fluency_interpretation": "",
+"data_limitations": [],
+"follow_up_actions": [],
+"overall_conclusion": "no_material_gap_observed|investigate_further|guardrail_breach|not_assessable"
+}
