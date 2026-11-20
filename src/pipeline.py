@@ -6,8 +6,10 @@ Handles errors gracefully (A11) and produces deterministic outcomes.
 """
 
 from datetime import datetime, timezone
+import os
 import time
 from typing import Any, Dict, List, Optional
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from src.classify import TicketClassifier, ClassificationResult
 from src.generate import DraftGenerator, GeneratedDraft
@@ -46,13 +48,37 @@ class SupportPipeline:
         self,
         doc_path: Optional[str] = None,
         db_path: Optional[str] = None,
-        confidence_threshold: float = 0.80,
+        confidence_threshold: Optional[float] = None,
+        top_k: Optional[int] = None,
     ):
-        self.retriever = DocRetriever(doc_path=doc_path)
+        load_dotenv()
+        env_thresh = os.getenv("CONFIDENCE_THRESHOLD")
+        if confidence_threshold is not None:
+            self.confidence_threshold = float(confidence_threshold)
+        elif env_thresh:
+            try:
+                self.confidence_threshold = float(env_thresh)
+            except ValueError:
+                self.confidence_threshold = 0.80
+        else:
+            self.confidence_threshold = 0.80
+
+        env_top_k = os.getenv("RETRIEVAL_TOP_K")
+        if top_k is not None:
+            self.top_k = int(top_k)
+        elif env_top_k:
+            try:
+                self.top_k = int(env_top_k)
+            except ValueError:
+                self.top_k = 5
+        else:
+            self.top_k = 5
+
+        self.retriever = DocRetriever(doc_path=doc_path, top_k=self.top_k)
         self.classifier = TicketClassifier()
         self.generator = DraftGenerator()
         self.guardrails = GuardrailsEngine()
-        self.router = Router(confidence_threshold=confidence_threshold)
+        self.router = Router(confidence_threshold=self.confidence_threshold)
         self.logger = DecisionLogger(db_path=db_path)
 
     def process_ticket(self, raw_ticket: Dict[str, Any], use_llm: bool = True) -> TicketProcessingResult:
@@ -79,7 +105,7 @@ class SupportPipeline:
             retrieved_sources: List[RetrievedSource] = []
             if not inbound_guard.blocked:
                 retrieved_sources = self.retriever.retrieve(
-                    ticket.cleaned_text, top_k=3, min_score=0.08
+                    ticket.cleaned_text, top_k=self.top_k, min_score=0.08
                 )
 
             # 5. Must not auto respond check from labels (if present)
@@ -184,7 +210,7 @@ class SupportPipeline:
                 prediction={"intent": "unclear_request", "confidence": 0.0, "urgency": "high"},
                 alternatives=[],
                 sources_used=[],
-                threshold_applied=0.80,
+                threshold_applied=self.confidence_threshold,
                 action_taken="escalate",
                 reason=fallback_reason,
                 guardrail_results={"error": "recovered"},

@@ -15,6 +15,7 @@ import os
 import re
 import sys
 from typing import Any, Dict, List, Optional
+from dotenv import load_dotenv
 import numpy as np
 from pydantic import BaseModel
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -22,6 +23,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Ensure project root is in sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+load_dotenv()
 
 from src.query_enhancer import QueryEnhancer, EnhancedQuery
 
@@ -47,11 +50,24 @@ class DocRetriever:
         chroma_dir: Optional[str] = None,
         use_chroma: Optional[bool] = None,
         min_threshold: float = 0.08,
+        top_k: Optional[int] = None,
     ):
+        load_dotenv()
         base_dir = os.path.dirname(os.path.dirname(__file__))
         self.doc_path = doc_path or os.path.join(base_dir, "data", "documentation.json")
         self.chroma_dir = chroma_dir or os.path.join(base_dir, "storage", "chroma")
         self.min_threshold = min_threshold
+
+        env_top_k = os.getenv("RETRIEVAL_TOP_K")
+        if top_k is not None:
+            self.top_k = int(top_k)
+        elif env_top_k:
+            try:
+                self.top_k = int(env_top_k)
+            except ValueError:
+                self.top_k = 5
+        else:
+            self.top_k = 5
 
         # Determine whether to use Chroma embeddings
         if use_chroma is not None:
@@ -170,14 +186,15 @@ class DocRetriever:
             self.chroma_store = None
 
     def _retrieve_chroma(
-        self, query: str, top_k: int = 5, min_score: float = 0.08
+        self, query: str, top_k: Optional[int] = None, min_score: float = 0.08
     ) -> List[RetrievedSource]:
         """Query Chroma vector store using dense sentence embeddings."""
+        k = top_k if top_k is not None else self.top_k
         if not self.chroma_store:
             return []
 
         results = self.chroma_store.similarity_search_with_relevance_scores(
-            query, k=top_k * 2
+            query, k=k * 2
         )
         sources: List[RetrievedSource] = []
         seen_keys = set()
@@ -205,7 +222,7 @@ class DocRetriever:
                     score=round(float(score), 4),
                 )
             )
-            if len(sources) >= top_k:
+            if len(sources) >= k:
                 break
 
         return sources
@@ -213,7 +230,7 @@ class DocRetriever:
     def retrieve(
         self,
         query: str,
-        top_k: int = 5,
+        top_k: Optional[int] = None,
         min_score: Optional[float] = None,
         channel: str = "email",
         intent: str = "general_inquiry",
@@ -221,10 +238,12 @@ class DocRetriever:
     ) -> List[RetrievedSource]:
         """
         Retrieves top_k passages relevant to the query.
+        Defaults to RETRIEVAL_TOP_K loaded from .env if top_k is not explicitly provided.
         Uses Chroma dense embeddings if active, with automatic TF-IDF fallback.
         Supports query enhancement (PR-02b) when enhance_query=True.
         Returns empty list if top score is below threshold (fail-closed).
         """
+        k = top_k if top_k is not None else self.top_k
         threshold = min_score if min_score is not None else self.min_threshold
         q = (query or "").strip()
         if not q:
@@ -242,7 +261,7 @@ class DocRetriever:
         # 1. Try Chroma semantic retrieval if enabled
         if self.use_chroma and self.chroma_store is not None:
             try:
-                chroma_results = self._retrieve_chroma(dense_q, top_k=top_k, min_score=threshold)
+                chroma_results = self._retrieve_chroma(dense_q, top_k=k, min_score=threshold)
                 if chroma_results:
                     return chroma_results
             except Exception:
@@ -278,7 +297,7 @@ class DocRetriever:
                     score=round(score, 4),
                 )
             )
-            if len(results) >= top_k:
+            if len(results) >= k:
                 break
 
         return results
@@ -296,7 +315,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CloudServe Knowledge Retrieval Engine")
     parser.add_argument("--query", type=str, default="Cannot reset password with MFA", help="Search query")
     parser.add_argument("--mode", type=str, choices=["chroma", "tfidf"], default="chroma", help="Engine mode")
-    parser.add_argument("--top_k", type=int, default=3, help="Number of results")
+    parser.add_argument("--top_k", type=int, default=None, help="Number of results (defaults to RETRIEVAL_TOP_K from .env)")
     parser.add_argument("--enhance", action="store_true", help="Enable PR-02b query enhancement")
     args = parser.parse_args()
 

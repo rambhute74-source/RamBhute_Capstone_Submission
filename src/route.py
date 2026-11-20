@@ -43,12 +43,17 @@ class Router:
     """
 
     def __init__(self, confidence_threshold: Optional[float] = None):
+        load_dotenv()
         env_thresh = os.getenv("CONFIDENCE_THRESHOLD")
-        self.threshold = (
-            confidence_threshold
-            if confidence_threshold is not None
-            else float(env_thresh if env_thresh else 0.80)
-        )
+        if confidence_threshold is not None:
+            self.threshold = float(confidence_threshold)
+        elif env_thresh:
+            try:
+                self.threshold = float(env_thresh)
+            except ValueError:
+                self.threshold = 0.80
+        else:
+            self.threshold = 0.80
 
     def route(
         self,

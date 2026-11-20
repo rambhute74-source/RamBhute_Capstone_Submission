@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "evaluation_date": "2026-11-20T14:34:07.291732+00:00",
+    "evaluation_date": "2026-11-20T16:36:41.871546+00:00",
     "input_file": "C:\\Users\\user\\Desktop\\CloudeVerseProject\\data\\development_tickets.json",
     "output_directory": "C:\\Users\\user\\Desktop\\CloudeVerseProject\\evaluation\\results",
-    "run_duration_seconds": 8.72
+    "run_duration_seconds": 8.07
   },
   "volume": {
     "total_tickets": 500,
@@ -14,19 +14,19 @@
   "business": {
     "first_contact_resolution_rate": 70.2,
     "escalation_rate": 29.8,
-    "mean_response_time_seconds": 0.0048,
-    "median_response_time_seconds": 0.002,
+    "mean_response_time_seconds": 0.0038,
+    "median_response_time_seconds": 0.0,
     "baseline_fcr_comparison": "42% (CloudServe baseline) -> 70.2% (Achieved)"
   },
   "technical": {
     "intent_classification_accuracy": 100.0,
-    "retrieval_hit_rate": 90.2,
-    "citation_accuracy": 88.41,
+    "retrieval_hit_rate": 91.6,
+    "citation_accuracy": 90.22,
     "hallucination_rate_pct": 0.0,
     "latency": {
-      "mean_seconds": 0.0048,
-      "median_seconds": 0.002,
-      "p95_seconds": 0.0157
+      "mean_seconds": 0.0038,
+      "median_seconds": 0.0,
+      "p95_seconds": 0.0164
     }
   },
   "governance": {

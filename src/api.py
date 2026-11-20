@@ -6,10 +6,13 @@ health monitoring, and operational metrics.
 """
 
 from typing import Any, Dict, List, Optional
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from src.logging_store import DecisionLogger
 from src.pipeline import SupportPipeline, TicketProcessingResult
+
+load_dotenv()
 
 app = FastAPI(
     title="CloudServe Intelligent Customer Support API",
@@ -40,6 +43,8 @@ def health_check():
     return {
         "status": "healthy",
         "service": "cloudserve-support-ai",
+        "confidence_threshold": pipeline.confidence_threshold,
+        "retrieval_top_k": pipeline.top_k,
         "doc_chunks_indexed": len(pipeline.retriever.chunks),
         "total_decisions_logged": logger.count_decisions(),
     }
