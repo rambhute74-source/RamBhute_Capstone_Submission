@@ -14,8 +14,9 @@ Built to address support queue bottlenecks, eliminate avoidable escalations, ens
 ### Installation
 
 ```bash
-# 1. Clone repository and navigate to root
- cd C:\Users\user\Desktop\CloudeVerseProject ('Sample Path')
+# 1. Clone the repository and enter the project folder
+git clone https://github.com/rambhute74-source/RamBhute_Capstone_Submission.git
+cd RamBhute_Capstone_Submission
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
@@ -30,8 +31,11 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 # 4. Configure environment
+# Windows PowerShell:
+Copy-Item .env.example .env
+# Linux / macOS:
 cp .env.example .env
-# Edit .env to verify OPENROUTER_API_KEY and model configurations
+# Add an OpenRouter API key to .env to enable LLM-backed features.
 ```
 
 ---

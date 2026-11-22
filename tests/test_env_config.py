@@ -15,14 +15,16 @@ from src.retrieve import DocRetriever, RetrievedSource
 from src.route import Router
 
 
-def test_env_file_contains_confidence_and_top_k():
-    """Verify that root .env defines CONFIDENCE_THRESHOLD and RETRIEVAL_TOP_K."""
-    env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
-    assert os.path.exists(env_path), ".env file must exist in project root"
-    with open(env_path, "r", encoding="utf-8") as f:
+def test_env_example_contains_confidence_and_top_k():
+    """Verify the checked-in environment template documents required settings."""
+    env_example_path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), ".env.example"
+    )
+    assert os.path.exists(env_example_path), ".env.example must exist in project root"
+    with open(env_example_path, "r", encoding="utf-8") as f:
         content = f.read()
-    assert "CONFIDENCE_THRESHOLD" in content, ".env must contain CONFIDENCE_THRESHOLD"
-    assert "RETRIEVAL_TOP_K" in content, ".env must contain RETRIEVAL_TOP_K"
+    assert "CONFIDENCE_THRESHOLD" in content
+    assert "RETRIEVAL_TOP_K" in content
 
 
 def test_router_uses_env_confidence_threshold(monkeypatch):

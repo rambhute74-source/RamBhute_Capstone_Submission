@@ -14,3 +14,11 @@ submission_staging/
 .vscode/
 Inputs/
 scripts/
+/monitoring/
+/build_docx_report.py
+/build_slide_deck.py
+/docs/Capstone_Presentation.pptx
+/docs/Capstone_Presentation_Slides.md
+/docs/Capstone_Report.docx
+/docs/Capstone_Report.md
+/docs/Video_Presentation_Script.md
