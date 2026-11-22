@@ -2,27 +2,27 @@
 CLOUDSERVE AI CUSTOMER SUPPORT - EVALUATION METRICS REPORT
 ============================================================
 
-Evaluation Date: 2026-11-20T16:47:26.654094+00:00
-Tickets Processed: 500
-Total Run Time: 8.34s
+Evaluation Date: 2026-11-22T03:38:05.075095+00:00
+Tickets Processed: 80
+Total Run Time: 6.05s
 
 --- VOLUME ---
-Answered Automatically: 351 (70.2%)
-Escalated to Humans:    149 (29.8%)
+Answered Automatically: 46 (57.5%)
+Escalated to Humans:    34 (42.5%)
 Blocked by Guardrails:  0
 
 --- BUSINESS OUTCOMES ---
-First Contact Resolution: 70.2% (Target: >=60%, Baseline: 42%)
-Escalation Rate:          29.8%
-Median Latency:           0.0s (P95: 0.0156s)
+First Contact Resolution: 57.5% (Target: >=60%, Baseline: 42%)
+Escalation Rate:          42.5%
+Median Latency:           0.0469s (P95: 0.0783s)
 
 --- TECHNICAL PERFORMANCE ---
 Intent Classification Accuracy: 100.0%
-Retrieval Top-K Hit Rate:       91.6%
-Citation Accuracy:              90.22%
+Retrieval Top-K Hit Rate:       90.57%
+Citation Accuracy:              85.71%
 
 --- GOVERNANCE AUDIT ---
-Decisions Logged:               500
+Decisions Logged:               80
 Audit Reconciles 1:1:           True
 Private Data in Outbound Text:  0 occurrences
 Guardrail Activations:          {'pii': 0, 'injection': 0, 'unsupported_claim': 0, 'grounding': 0}

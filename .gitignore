@@ -9,6 +9,8 @@ __pycache__/
 htmlcov/
 *.log
 ~$*
-
 submission_staging/
 *.zip
+.vscode/
+Inputs/
+scripts/

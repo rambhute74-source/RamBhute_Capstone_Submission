@@ -15,7 +15,7 @@ Built to address support queue bottlenecks, eliminate avoidable escalations, ens
 
 ```bash
 # 1. Clone repository and navigate to root
-cd C:\Users\user\Desktop\CloudeVerseProject
+ cd C:\Users\user\Desktop\CloudeVerseProject ('Sample Path')
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
@@ -53,7 +53,7 @@ All 14 unit and integration tests execute and pass cleanly.
 The evaluation harness processes any input ticket dataset unattended without hardcoded paths, producing comprehensive business, technical, and governance metrics reports:
 
 ```bash
-python -m evaluation.harness --input data/development_tickets.json --output evaluation/results/
+python -m evaluation.harness --input data/validation_tickets.json --output evaluation/results/
 ```
 
 ### Evaluation Output Artifacts
