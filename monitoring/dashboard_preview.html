@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudServe AI Support - Grafana Observability Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-dark: #111217;
+      --card-bg: #181b1f;
+      --card-border: #2c3235;
+      --text-main: #ccccdc;
+      --text-muted: #8e8e9e;
+      --accent-orange: #ff7800;
+      --accent-blue: #3274d9;
+      --accent-green: #56a64b;
+      --accent-red: #e02f44;
+      --accent-purple: #a352cc;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 20px;
+    }
+    .title-group h1 {
+      margin: 0 0 6px 0;
+      font-size: 22px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background-color: #2c3235;
+      color: #a0a0b0;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn {
+      background: #22252b;
+      color: #fff;
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #2c3235;
+      border-color: #3d4448;
+    }
+    .btn-primary {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+    .btn-primary:hover {
+      background: #2359aa;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5e5f0;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title small {
+      font-size: 11px;
+      font-weight: normal;
+      color: var(--text-muted);
+    }
+    .col-12 { grid-column: span 12; }
+    .col-8 { grid-column: span 8; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-3 { grid-column: span 3; }
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 240px;
+    }
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 240px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin: 10px 0;
+    }
+    .stat-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .notice {
+      background: rgba(50, 116, 217, 0.15);
+      border-left: 4px solid var(--accent-blue);
+      padding: 12px 16px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="title-group">
+      <h1>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff7800" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17l-5-5-3 3-4-4"/></svg>
+        CloudServe AI Support - Observability Dashboard
+        <span class="badge">Grafana & Prometheus</span>
+      </h1>
+      <p class="subtitle">Conforms to Setup Guide Section 06 (Monitoring) · Real-Time Telemetry & Model Drift Detection</p>
+    </div>
+    <div class="controls">
+      <span style="font-size: 12px; color: #8e8e9e;">Scrape: 15s</span>
+      <button class="btn btn-primary" onclick="refreshData()">Simulate Live Inflow</button>
+      <button class="btn" onclick="toggleKillSwitch()" id="ksBtn">Trigger Kill Switch</button>
+    </div>
+  </div>
+
+  <div class="notice">
+    <strong>Dashboard Access Notice:</strong> This interactive view renders the exact panels defined in <code>monitoring/grafana_dashboard.json</code>. You can also run the official Grafana & Prometheus Docker stack by running <code>docker compose -f monitoring/docker-compose.yml up -d</code> and opening <a href="http://localhost:3000" target="_blank" style="color: #68a0ff;">http://localhost:3000</a>.
+  </div>
+
+  <div class="grid">
+    <!-- Panel 1: Throughput -->
+    <div class="card col-8">
+      <div class="card-title">
+        <span>Tickets Processed Per Hour (By Channel & Outcome)</span>
+        <small>Setup Guide Table 12 · rate(tickets_processed_total[1h])</small>
+      </div>
+      <div class="chart-box">
+        <canvas id="chartThroughput"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 2: Automation Proportion -->
+    <div class="card col-4">
+      <div class="card-title">
+        <span>Automation Proportion</span>
+        <small>Setup Guide Para 62 · Automated vs Escalation</small>
+      </div>
+      <div class="chart-box">
+        <canvas id="chartProportion"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 3: Response Latency -->
+    <div class="card col-6">
+      <div class="card-title">
+        <span>Response Latency (P50 Median & P95 Percentile)</span>
+        <small>Setup Guide Para 63 · histogram_quantile(response_seconds)</small>
+      </div>
+      <div class="chart-box">
+        <canvas id="chartLatency"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 4: Guardrail Activations -->
+    <div class="card col-6">
+      <div class="card-title">
+        <span>Guardrail Activations Over Time</span>
+        <small>Setup Guide Para 64 · sum by (guardrail)</small>
+      </div>
+      <div class="chart-box">
+        <canvas id="chartGuardrails"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 5: Confidence Distribution (Drift Detection) -->
+    <div class="card col-8">
+      <div class="card-title">
+        <span>Confidence Score Distribution (Early Model Drift Indicator)</span>
+        <small>Setup Guide Para 65 · intent_confidence_score_bucket</small>
+      </div>
+      <div class="chart-box">
+        <canvas id="chartConfidence"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 6: Kill Switch Status -->
+    <div class="card col-4">
+      <div class="card-title">
+        <span>Containment Kill Switch</span>
+        <small>NFR-09 · kill_switch_active</small>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="ksStatus">NORMAL</div>
+        <div class="stat-sub" id="ksSub">Automated triage and routing enabled.<br>Threshold: ≥ 0.80</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    Chart.defaults.color = '#8e8e9e';
+    Chart.defaults.borderColor = '#2c3235';
+
+    // 1. Throughput Chart
+    const ctxThroughput = document.getElementById('chartThroughput').getContext('2d');
+    const chartThroughput = new Chart(ctxThroughput, {
+      type: 'line',
+      data: {
+        labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+        datasets: [
+          { label: 'Email - Automated', data: [42, 48, 55, 62, 58, 65, 70], borderColor: '#56a64b', tension: 0.3 },
+          { label: 'Chat - Automated', data: [35, 38, 44, 50, 47, 52, 56], borderColor: '#3274d9', tension: 0.3 },
+          { label: 'Docs/Forum - Automated', data: [20, 24, 28, 30, 26, 31, 35], borderColor: '#a352cc', tension: 0.3 },
+          { label: 'Escalations (All Channels)', data: [14, 16, 19, 18, 15, 17, 18], borderColor: '#ff7800', tension: 0.3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 2. Proportion Chart
+    const ctxProportion = document.getElementById('chartProportion').getContext('2d');
+    const chartProportion = new Chart(ctxProportion, {
+      type: 'doughnut',
+      data: {
+        labels: ['Automated Drafts', 'Human Escalation', 'Guardrail Containment'],
+        datasets: [{
+          data: [72, 23, 5],
+          backgroundColor: ['#56a64b', '#ff7800', '#e02f44']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 3. Latency Chart
+    const ctxLatency = document.getElementById('chartLatency').getContext('2d');
+    const chartLatency = new Chart(ctxLatency, {
+      type: 'line',
+      data: {
+        labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+        datasets: [
+          { label: 'P50 Median Latency (s)', data: [0.18, 0.22, 0.21, 0.25, 0.23, 0.24, 0.22], borderColor: '#3274d9', tension: 0.3 },
+          { label: 'P95 Percentile Latency (s)', data: [0.55, 0.62, 0.58, 0.71, 0.64, 0.68, 0.62], borderColor: '#ff7800', tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { max: 1.5, title: { display: true, text: 'Seconds' } } }
+      }
+    });
+
+    // 4. Guardrails Chart
+    const ctxGuardrails = document.getElementById('chartGuardrails').getContext('2d');
+    const chartGuardrails = new Chart(ctxGuardrails, {
+      type: 'bar',
+      data: {
+        labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+        datasets: [
+          { label: 'Inbound PII', data: [3, 5, 2, 6, 4, 3, 5], backgroundColor: '#e02f44' },
+          { label: 'Prompt Injection', data: [1, 2, 0, 3, 1, 2, 1], backgroundColor: '#ff7800' },
+          { label: 'Forbidden Refund Commitments', data: [2, 1, 3, 2, 1, 2, 3], backgroundColor: '#a352cc' }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
+    });
+
+    // 5. Confidence Distribution
+    const ctxConfidence = document.getElementById('chartConfidence').getContext('2d');
+    const chartConfidence = new Chart(ctxConfidence, {
+      type: 'bar',
+      data: {
+        labels: ['0.0-0.2', '0.2-0.4', '0.4-0.6', '0.6-0.8', '0.8-0.9', '0.9-1.0'],
+        datasets: [{
+          label: 'Ticket Intent Classifications',
+          data: [4, 8, 18, 42, 120, 290],
+          backgroundColor: '#3274d9'
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Kill Switch Toggle
+    let ksActive = false;
+    function toggleKillSwitch() {
+      ksActive = !ksActive;
+      const statusEl = document.getElementById('ksStatus');
+      const subEl = document.getElementById('ksSub');
+      const btn = document.getElementById('ksBtn');
+      if (ksActive) {
+        statusEl.textContent = 'CONTAINMENT ACTIVE';
+        statusEl.style.color = '#e02f44';
+        subEl.innerHTML = '<strong>ALL</strong> incoming tickets fail closed to human agents.<br>NFR-09 triggered.';
+        btn.textContent = 'Deactivate Kill Switch';
+        btn.style.background = '#e02f44';
+      } else {
+        statusEl.textContent = 'NORMAL';
+        statusEl.style.color = '#56a64b';
+        subEl.innerHTML = 'Automated triage and routing enabled.<br>Threshold: ≥ 0.80';
+        btn.textContent = 'Trigger Kill Switch';
+        btn.style.background = '#22252b';
+      }
+    }
+
+    function refreshData() {
+      chartThroughput.data.datasets.forEach(ds => {
+        ds.data = ds.data.map(v => Math.round(v * (0.9 + Math.random() * 0.25)));
+      });
+      chartThroughput.update();
+      chartLatency.data.datasets[0].data = chartLatency.data.datasets[0].data.map(v => +(v + (Math.random() - 0.5) * 0.05).toFixed(2));
+      chartLatency.data.datasets[1].data = chartLatency.data.datasets[1].data.map(v => +(v + (Math.random() - 0.5) * 0.08).toFixed(2));
+      chartLatency.update();
+    }
+  </script>
+</body>
+</html>

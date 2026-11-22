@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'CloudServe Dashboards'
+    orgId: 1
+    folder: 'CloudServe'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/grafana_dashboard.json

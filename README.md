@@ -89,7 +89,38 @@ Interactive Swagger documentation is available at `http://localhost:8000/docs`.
 
 ---
 
-## 5. System Architecture
+## 5. Monitoring Dashboard
+
+Start the API server first, then start Prometheus and Grafana:
+
+```bash
+# Terminal 1: start the CloudServe API and metrics server
+python -m uvicorn src.api:app --host 0.0.0.0 --port 8000
+
+# Terminal 2: start the monitoring containers
+cd monitoring
+docker compose up -d
+```
+
+Open the monitoring services in a browser:
+
+- **Grafana dashboard:** <http://localhost:3000>
+- **Provisioned CloudServe dashboard:** <http://localhost:3000/d/cloudserve-monitoring>
+- **Prometheus:** <http://localhost:9090>
+- **API metrics:** <http://localhost:8000/metrics>
+
+Grafana accepts the configured credentials `admin` / `admin`. Anonymous access is also enabled. The CloudServe dashboard is automatically provisioned in the **CloudServe** folder.
+
+To stop the monitoring containers:
+
+```bash
+cd monitoring
+docker compose down
+```
+
+---
+
+## 6. System Architecture
 
 ```
 [Inbound Tickets (4 Channels: Email, Chat, Docs, Forum)]
