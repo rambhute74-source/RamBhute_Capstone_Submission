@@ -38,13 +38,13 @@ cp .env.example .env
 
 ## 2. Running Tests (Acceptance Criterion A12)
 
-Execute the complete test suite covering all 12 acceptance criteria (A1–A12):
+Execute the complete test suite covering all 12 acceptance criteria (A1–A12) along with dynamic configuration, Prometheus telemetry, prompt linking, and query enhancement:
 
 ```bash
 python -m pytest tests/ -v
 ```
 
-All 14 unit and integration tests execute and pass cleanly.
+All 33 unit, integration, and operational tests execute and pass cleanly (14 acceptance tests, 5 environment configuration tests, 4 Prometheus monitoring tests, 6 prompt linking tests, and 4 query enhancer tests).
 
 ---
 
@@ -53,7 +53,7 @@ All 14 unit and integration tests execute and pass cleanly.
 The evaluation harness processes any input ticket dataset unattended without hardcoded paths, producing comprehensive business, technical, and governance metrics reports:
 
 ```bash
-python -m evaluation.harness --input data/validation_tickets.json --output evaluation/results/
+python -m evaluation.harness --input data/development_tickets.json --output evaluation/results/
 ```
 
 ### Evaluation Output Artifacts
@@ -81,6 +81,7 @@ Interactive Swagger documentation is available at `http://localhost:8000/docs`.
 - `POST /tickets/batch`: Batch process multiple tickets.
 - `GET /decisions`: Query the persistent SQLite audit log.
 - `GET /health`: Health and knowledge base index status.
+- `GET /metrics`: Prometheus metrics scrape endpoint (traffic volume, confidence, latency, guardrail trips).
 
 ---
 
@@ -98,35 +99,45 @@ Interactive Swagger documentation is available at `http://localhost:8000/docs`.
        └── Prompt Injection / Instruction Integrity
                        │
                        ▼
-        [3. Classification (src/classify.py)]
+        [3. Query Enhancer (src/query_enhancer.py - PR-02b)]
+       └── Vocabulary Bridging & Symptom-to-KB Title Expansion
+                       │
+                       ▼
+         [4. Classification (src/classify.py - PR-01)]
        ├── Intent Category (22 Classes)
        ├── Urgency Level (High, Medium, Low)
        └── Calibrated Confidence Score [0.0 - 1.0]
                        │
                        ▼
-         [4. Retrieval (src/retrieve.py)]
-       └── TF-IDF / Sublinear n-grams over 29 Approved KB Articles
+     [5. Dual Retrieval Engine (src/retrieve.py - PR-02)]
+       ├── Dense Chroma Vector Store (all-MiniLM-L6-v2, 59 chunks)
+       └── Sublinear TF-IDF Deterministic Fallback (29 Articles)
                        │
                        ▼
-      [5. Grounded Generator (src/generate.py)]
+      [6. Grounded Generator (src/generate.py - PR-04)]
        ├── Explicit Machine-Draft Disclosure Header
        ├── Exact Citations to Retrieved Articles
        └── Adherence to `must_not_claim` Policies
                        │
                        ▼
-       [6. Outbound Guardrails (src/guardrails.py)]
+       [7. Outbound Guardrails (src/guardrails.py)]
        ├── Grounding & Unsupported Claim Checks
        └── Outbound PII Leakage Protection
                        │
                        ▼
-      [7. Deterministic Router (src/route.py)]
+     [8. Deterministic Router (src/route.py - PR-03/PR-05)]
        ├── Fail-closed for Protected Intents (Security, Billing, Compliance)
-       ├── Threshold Enforcement (>= 0.80)
-       ├── Automated Draft vs. Context-Rich Escalation Brief
+       ├── Dynamic Confidence Threshold Enforcement (>= 0.80 from .env)
+       ├── Containment Kill Switch Enforcement (KILL_SWITCH_ACTIVE)
+       └── Automated Draft vs. Context-Rich Escalation Brief
                        │
                        ▼
-      [8. Decision Logger (src/logging_store.py)]
+       [9. Decision Logger (src/logging_store.py)]
        └── Persistent SQLite Audit Log (1:1 Reconciliation)
+                       │
+                       ▼
+     [10. Telemetry & Monitoring (src/monitoring.py)]
+       └── Prometheus Exporter (/metrics:8001) & Grafana Dashboard
 ```
 
 ---
@@ -143,7 +154,32 @@ Interactive Swagger documentation is available at `http://localhost:8000/docs`.
 | **A6** | Generated answers carry valid citations | `test_a6_answer_generation_and_citations` | **PASS** |
 | **A7** | Guardrail actively blocks adversarial & PII inputs | `test_a7_guardrail_blocks_prompt_injection` | **PASS** |
 | **A8** | Persistent decision log reconciling 1:1 | `test_a8_decision_logging_and_reconciliation` | **PASS** |
-| **A9** | Unattended full evaluation run | `python -m evaluation.harness` on 500 tickets | **PASS** |
+| **A9** | Unattended full evaluation run | `python -m evaluation.harness` on tickets | **PASS** |
 | **A10** | Metrics report generated automatically | `evaluation/results/metrics_report.json` | **PASS** |
 | **A11** | Failure handling without crashing | `test_a11_pipeline_handles_malformed_input` | **PASS** |
-| **A12** | Test suite runs and passes with single command | `python -m pytest tests/ -v` (14/14 pass) | **PASS** |
+| **A12** | Test suite runs and passes with single command | `python -m pytest tests/ -v` (33/33 pass) | **PASS** |
+| **Ext-1** | Dynamic .env Configuration & Kill Switch | `tests/test_env_config.py` (5/5 pass) | **PASS** |
+| **Ext-2** | Prometheus Telemetry & Metrics Scrape | `tests/test_monitoring.py` (4/4 pass) | **PASS** |
+| **Ext-3** | Versioned Prompt Linking & Registry | `tests/test_prompt_linking.py` (6/6 pass) | **PASS** |
+| **Ext-4** | PR-02b Query Enhancer & Vocabulary Bridging | `tests/test_query_enhancer.py` (4/4 pass) | **PASS** |
+
+---
+
+## 7. Attribution & AI Tool Use Declaration
+
+This project was engineered and implemented by **Ram Bhute** as the Capstone Project for Forward Deployed AI Engineering.
+
+### Core Frameworks & Open Source Libraries
+- **LLM Foundation Model**: Meta LLaMA 3.1 8B Instruct (`meta-llama/llama-3.1-8b-instruct`) accessed via OpenRouter API.
+- **Dense Embeddings & Vector Storage**: Sentence-Transformers (`all-MiniLM-L6-v2`) and ChromaDB vector store.
+- **Web API & Validation**: FastAPI (`0.104.0+`), Uvicorn, and Pydantic v2.
+- **Machine Learning & Retrieval**: Scikit-Learn (TF-IDF vectorizer, cosine similarity).
+- **Observability**: Prometheus Client (`prometheus_client`) and Grafana dashboard templates.
+- **Testing**: PyTest (`pytest`, `pytest-asyncio`).
+
+### AI Assistance Declaration
+In accordance with Stage 6 submission guidelines:
+- **AI Tool Used**: Antigravity / Gemini CLI acting as an AI pair programmer.
+- **Nature of Assistance**: Assisted with initial boilerplate scaffolding, test case expansion across edge scenarios, and markdown/document styling synchronization.
+- **Human Oversight**: All architecture decisions, prompt engineering formulations, guardrail boundaries, routing logic, and verification were directed, reviewed, and finalized by Ram Bhute.
+

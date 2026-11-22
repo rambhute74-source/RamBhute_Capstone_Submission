@@ -159,7 +159,8 @@ def test_a7_guardrail_blocks_prompt_injection(guardrails):
 
 
 def test_a7_guardrail_blocks_pii(guardrails):
-    pii_text = "Here is my secret token: sk-abcdefghijklmnopqrstuvwxyz1234567890"
+    # Test sensitive bearer token detection without hardcoding live API key strings
+    pii_text = "Here is my sensitive token: Bearer mock_access_token_for_testing_12345678"
     res = guardrails.validate_inbound_ticket(pii_text)
     assert res.blocked is True
     assert res.trigger_type == "pii"

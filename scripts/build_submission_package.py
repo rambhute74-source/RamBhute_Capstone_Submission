@@ -451,6 +451,7 @@ RETRIEVAL_TOP_K=5
 USE_CHROMA_RETRIEVAL=true
 START_METRICS_SERVER=false
 METRICS_PORT=8001
+KILL_SWITCH_ACTIVE=false
 """
     with open(os.path.join(code_dir, ".env"), "w", encoding="utf-8") as f:
         f.write(sanitized_env)

@@ -3,9 +3,9 @@
     "ticket_id": "VAL-0001",
     "channel": "forum",
     "action_taken": "auto_respond",
-    "summary": "Need to rotate an exposed key",
+    "summary": "A production key is returning 401 without any changes on the customer's side.",
     "predicted_intent": "api_key_issue",
-    "intent_confidence": 0.859,
+    "intent_confidence": 0.95,
     "urgency": "medium",
     "sources_cited": [
       "DOC-AUTH-004",
@@ -16,15 +16,15 @@
     ],
     "draft_response": "[Machine-Drafted \u2014 Pending Human Agent Review]\n\nHello Dilnoza Karimova,\n\nThank you for contacting CloudServe Solutions Support regarding your inquiry.\n\nBased on our documentation (API key rotation and scope management - [DOC-AUTH-004]):\n\n## Resolution\n\n1. Check the API keys page for the key's status and expiry. Revoked and expired keys are listed with the date and the user who acted.\n2. Review the scopes attached to the key. Read-only keys cannot write, and project-scoped keys cannot reach organisation endpoints.\n3. To rotate without downtime, create the replacement key first, deploy it, confirm traffic has moved, then revoke the old key.\n4. If a key has been exposed publicly, re\n\nIf you have additional questions or if this does not fully resolve the issue, please reply to this thread and an agent will assist you.\n\nBest regards,\nCloudServe Support Team",
     "escalation_brief": null,
-    "reason": "Confidence 0.86 >= 0.80, grounded in [DOC-AUTH-004], intent 'api_key_issue' is eligible for auto-drafting.",
+    "reason": "Confidence 0.95 >= 0.80, grounded in [DOC-AUTH-004], intent 'api_key_issue' is eligible for auto-drafting.",
     "guardrail_results": {
       "pii": "pass",
       "injection": "pass",
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0738,
-    "decision_id": "fdffdae3-b9e8-4003-baf9-290222e456c1",
+    "latency_seconds": 0.0,
+    "decision_id": "d21da35f-9ddb-4595-abfe-3337fc688761",
     "is_grounded": true
   },
   {
@@ -62,7 +62,7 @@
       "injection": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "5d5245c4-2840-4ea3-a644-75cba5857fc2",
+    "decision_id": "acc424be-53c9-44ae-b846-dc93e7215db3",
     "is_grounded": false
   },
   {
@@ -100,8 +100,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0468,
-    "decision_id": "871e2bd2-ba28-41f3-9bcb-da0310179fe5",
+    "latency_seconds": 0.0479,
+    "decision_id": "976b4838-8124-4d40-9e7c-2ad552ab8baa",
     "is_grounded": false
   },
   {
@@ -142,8 +142,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0735,
-    "decision_id": "ec871d73-41b2-4628-a6ad-668874e72260",
+    "latency_seconds": 0.0548,
+    "decision_id": "2f8e1fb4-5c46-4580-96ec-34812667d02b",
     "is_grounded": false
   },
   {
@@ -168,8 +168,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0782,
-    "decision_id": "45f369c3-89bd-410c-9f2c-f94ef11798f1",
+    "latency_seconds": 0.0343,
+    "decision_id": "75ca43cc-461e-4be3-ab3f-c47f6fd87b9d",
     "is_grounded": true
   },
   {
@@ -195,8 +195,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0703,
-    "decision_id": "06f7ef5c-9a8b-49ef-90d1-ba149b2dcd09",
+    "latency_seconds": 0.0469,
+    "decision_id": "2c97a491-abd6-4bb0-b6bf-42ae5719457f",
     "is_grounded": true
   },
   {
@@ -233,8 +233,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "14701a59-277b-49c9-b3ea-88e982dd780d",
+    "latency_seconds": 0.0495,
+    "decision_id": "5c105064-fdc4-4f20-a137-144c77d3853a",
     "is_grounded": false
   },
   {
@@ -275,8 +275,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0156,
-    "decision_id": "0745f600-d1b0-4145-ae7c-6270b3201b00",
+    "latency_seconds": 0.0157,
+    "decision_id": "b0f3c759-4a93-4a80-8190-c7b933ca7dee",
     "is_grounded": false
   },
   {
@@ -316,7 +316,7 @@
       "injection": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "439e265a-5039-4c64-bcd7-3838c263d081",
+    "decision_id": "2dd18a9c-b83f-4315-9186-d4bb6d1ea874",
     "is_grounded": false
   },
   {
@@ -357,8 +357,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0478,
-    "decision_id": "fbd32255-3eb8-48d6-af7b-221d5dc643c0",
+    "latency_seconds": 0.0872,
+    "decision_id": "68111461-bcd0-400d-aa32-c813a9d8303e",
     "is_grounded": false
   },
   {
@@ -384,8 +384,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0313,
-    "decision_id": "c06e2fb7-4b47-4c26-804b-b64cc6106316",
+    "latency_seconds": 0.1082,
+    "decision_id": "85d095f3-3980-4a0d-ab25-33fea22971b5",
     "is_grounded": true
   },
   {
@@ -411,8 +411,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "5bc5dde4-a7fc-4ca7-b3df-e59e513f3663",
+    "latency_seconds": 0.0057,
+    "decision_id": "c1eca023-81b9-460c-870b-5330824ae062",
     "is_grounded": true
   },
   {
@@ -453,8 +453,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0463,
-    "decision_id": "5f14ac37-71c2-4961-8fa1-284ce4c691c8",
+    "latency_seconds": 0.1122,
+    "decision_id": "b6582e68-b1b4-49c5-b39c-b30106a3fa0a",
     "is_grounded": false
   },
   {
@@ -480,8 +480,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0719,
-    "decision_id": "f68468ff-341a-404f-a3cc-b94227c1d823",
+    "latency_seconds": 0.1096,
+    "decision_id": "4cabfa53-2902-43e9-921d-9b3132aff80d",
     "is_grounded": true
   },
   {
@@ -517,8 +517,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "35a36b57-8e8f-4cc1-9396-9ad2b2e01d3a",
+    "latency_seconds": 0.0985,
+    "decision_id": "b691246c-7a4d-4296-b1b3-ca916b4102c5",
     "is_grounded": false
   },
   {
@@ -545,8 +545,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0711,
-    "decision_id": "4355e1d3-0529-42c1-b3b1-6f2b5c4e6d5a",
+    "latency_seconds": 0.0959,
+    "decision_id": "190fa370-3acd-4adf-b443-1e1a4ebc47a1",
     "is_grounded": true
   },
   {
@@ -582,8 +582,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0313,
-    "decision_id": "80d0c05c-1d72-4769-baff-7634bc26aa95",
+    "latency_seconds": 0.1073,
+    "decision_id": "df5a00a1-607c-4acf-98d2-9a3dd43fb14f",
     "is_grounded": false
   },
   {
@@ -610,8 +610,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "691a070d-c4c0-44d0-80a1-48bc7c5ada87",
+    "latency_seconds": 0.0165,
+    "decision_id": "efbcfa5c-9768-488d-8e8b-3515af97123c",
     "is_grounded": true
   },
   {
@@ -637,8 +637,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0475,
-    "decision_id": "4aa5500c-3ae9-4a0c-8f2e-b4ee1a699d90",
+    "latency_seconds": 0.1145,
+    "decision_id": "4d8c2c47-9b6d-4597-9f34-febc08a93a16",
     "is_grounded": true
   },
   {
@@ -676,8 +676,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0401,
-    "decision_id": "b5962ab4-2c20-4b3a-b139-eacafc153f51",
+    "latency_seconds": 0.1351,
+    "decision_id": "810f0844-43ff-4678-a272-4caeb0719d57",
     "is_grounded": false
   },
   {
@@ -702,7 +702,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "f1a8f59c-e877-4ab2-915a-bda921e51e2b",
+    "decision_id": "5c2de78c-5173-44dd-b42a-b440a16df9c1",
     "is_grounded": true
   },
   {
@@ -726,8 +726,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0466,
-    "decision_id": "50a3ee1b-59ba-4d05-aa97-13bf128b506f",
+    "latency_seconds": 0.114,
+    "decision_id": "5479a46a-1296-4159-be64-02f39ddaa79e",
     "is_grounded": true
   },
   {
@@ -754,8 +754,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0781,
-    "decision_id": "d89263e3-9489-4ef0-adb4-fc27b8170e1e",
+    "latency_seconds": 0.1074,
+    "decision_id": "72badca5-5c1b-492f-90a3-afd08a1c1069",
     "is_grounded": true
   },
   {
@@ -781,7 +781,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "3b37c6e6-d96f-4ad7-b3de-7725f78e62ea",
+    "decision_id": "b6d29455-9846-4085-9009-9baca48ecbb2",
     "is_grounded": true
   },
   {
@@ -808,8 +808,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0638,
-    "decision_id": "0271f781-c4f4-4fa6-bed4-1be1f9486e01",
+    "latency_seconds": 0.1324,
+    "decision_id": "164752ac-6e20-48aa-afbf-9682b5842336",
     "is_grounded": true
   },
   {
@@ -850,8 +850,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0781,
-    "decision_id": "1dede6eb-c997-4d2c-98c2-fcb0348f50f9",
+    "latency_seconds": 0.0988,
+    "decision_id": "87b9bed5-fabb-4f62-8876-182458672fb7",
     "is_grounded": false
   },
   {
@@ -878,8 +878,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.042,
-    "decision_id": "03703942-091f-4232-961a-e821efc2da6c",
+    "latency_seconds": 0.0952,
+    "decision_id": "239743a5-6717-4cd4-be2b-8f2017a8133d",
     "is_grounded": true
   },
   {
@@ -906,8 +906,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0781,
-    "decision_id": "9222dcb4-ab23-42b5-9d7e-33a52895b9c1",
+    "latency_seconds": 0.0998,
+    "decision_id": "05d1c12d-848a-4089-8285-736f16ea2d92",
     "is_grounded": true
   },
   {
@@ -933,8 +933,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "60f51bec-accd-4d48-af4d-7152520b3f34",
+    "latency_seconds": 0.0186,
+    "decision_id": "ddc56c32-6c35-4af7-be7c-e864e1a32c24",
     "is_grounded": true
   },
   {
@@ -967,8 +967,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0468,
-    "decision_id": "7b987ffd-ba66-473b-bc09-7180eac2371d",
+    "latency_seconds": 0.1128,
+    "decision_id": "fdbc72ba-e687-4714-830f-9c114329f36c",
     "is_grounded": false
   },
   {
@@ -995,8 +995,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "f5f0261b-9c23-42f0-9615-ac4aa0920279",
+    "latency_seconds": 0.0187,
+    "decision_id": "491967a0-d204-47b6-b764-6f856224ca7f",
     "is_grounded": true
   },
   {
@@ -1035,8 +1035,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "b3af7080-96ba-42e2-9b1f-dc9cfe758050",
+    "latency_seconds": 0.0156,
+    "decision_id": "e6091632-2000-40ea-ae87-5457e284a60d",
     "is_grounded": false
   },
   {
@@ -1063,8 +1063,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0404,
-    "decision_id": "67e2f344-78aa-4dce-8d41-2ff75d012a49",
+    "latency_seconds": 0.1168,
+    "decision_id": "49fe993d-5aee-43eb-9c83-34f420374f2d",
     "is_grounded": true
   },
   {
@@ -1090,8 +1090,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0157,
-    "decision_id": "1b5ace50-3cfe-46a9-90a0-c9947cc6b9d5",
+    "latency_seconds": 0.0156,
+    "decision_id": "f2d712b2-83ee-4ba3-9b3f-177450739406",
     "is_grounded": true
   },
   {
@@ -1128,8 +1128,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "46bed7b2-644b-403c-a690-dfc9ad0b8dd3",
+    "latency_seconds": 0.1001,
+    "decision_id": "9f5aaf43-45f5-4e7c-b837-bbe3e39ee102",
     "is_grounded": false
   },
   {
@@ -1155,8 +1155,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "aed73e6f-f6ff-46e4-828c-69786f4d807e",
+    "latency_seconds": 0.0004,
+    "decision_id": "992ae8a9-0d38-4ba9-9f4c-af0dc3743bb3",
     "is_grounded": true
   },
   {
@@ -1195,8 +1195,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "ae144a6b-80ed-45b9-bcbf-1388514d24df",
+    "latency_seconds": 0.1008,
+    "decision_id": "bd608157-40d9-4e56-9695-61b01494b4d6",
     "is_grounded": false
   },
   {
@@ -1223,8 +1223,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0718,
-    "decision_id": "f173dbc0-dd0d-45cd-97f1-7e0df78a193c",
+    "latency_seconds": 0.1113,
+    "decision_id": "55194499-c826-4bf9-a3c0-67acf14ffbcf",
     "is_grounded": true
   },
   {
@@ -1251,8 +1251,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0781,
-    "decision_id": "665951d8-024c-4f4f-9399-be405951385d",
+    "latency_seconds": 0.1223,
+    "decision_id": "99799f5e-80c6-4381-9ad8-4cde66b966e4",
     "is_grounded": true
   },
   {
@@ -1293,8 +1293,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "ea19e627-3ee9-408b-a71f-edc790314535",
+    "latency_seconds": 0.0158,
+    "decision_id": "57a0bc00-edc8-4c1e-b74b-f513e93f64fb",
     "is_grounded": false
   },
   {
@@ -1335,8 +1335,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "d12c52c1-0f69-4738-ac62-e3959039c0e1",
+    "latency_seconds": 0.0149,
+    "decision_id": "8477ee0d-e1b0-4811-bac2-c4a419ad4422",
     "is_grounded": false
   },
   {
@@ -1363,8 +1363,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "f85492ac-41ce-49a0-a45a-082041193d4c",
+    "latency_seconds": 0.0166,
+    "decision_id": "8d9f144f-4834-4aee-a936-a057627afd29",
     "is_grounded": true
   },
   {
@@ -1403,8 +1403,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0156,
-    "decision_id": "673e0f6d-5420-48f2-9062-c43a5bf5fc80",
+    "latency_seconds": 0.0184,
+    "decision_id": "4761ccc3-29b8-4970-801e-00c0fd7fffd0",
     "is_grounded": false
   },
   {
@@ -1446,7 +1446,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "9e88e4cd-f5ea-456c-9ee2-68392fb46f25",
+    "decision_id": "5d8dded0-c2ea-4085-b2c5-94712f520a83",
     "is_grounded": false
   },
   {
@@ -1471,8 +1471,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0782,
-    "decision_id": "470ffb83-b017-4d36-8748-c42831c8a684",
+    "latency_seconds": 0.0993,
+    "decision_id": "b715beff-67c6-4cf3-99c5-6dca5d2084f6",
     "is_grounded": true
   },
   {
@@ -1513,8 +1513,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0775,
-    "decision_id": "e4dda7a5-d95e-48b5-a6cd-3108029cb75b",
+    "latency_seconds": 0.1008,
+    "decision_id": "7a68ba8f-7e87-4504-ba24-029957adec7f",
     "is_grounded": false
   },
   {
@@ -1553,8 +1553,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0859,
-    "decision_id": "69f65032-cc96-4842-8d58-e284233a0acf",
+    "latency_seconds": 0.098,
+    "decision_id": "d2b0e870-e94b-40c3-9158-d27fcf933e25",
     "is_grounded": false
   },
   {
@@ -1592,8 +1592,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "bfe88bf6-01fd-45d4-a9d0-4dea7ffe6f56",
+    "latency_seconds": 0.1167,
+    "decision_id": "aed22b1a-9c7a-4317-a35b-e9d4316111b2",
     "is_grounded": false
   },
   {
@@ -1619,8 +1619,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0723,
-    "decision_id": "0741722e-6c5c-4e16-863f-805234d3e775",
+    "latency_seconds": 0.107,
+    "decision_id": "038a00b9-492a-45e4-9cf4-ffe8abe50ce3",
     "is_grounded": true
   },
   {
@@ -1644,8 +1644,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "509bcc87-f7ae-461d-bd17-f9bf21143fde",
+    "latency_seconds": 0.0084,
+    "decision_id": "f8452b11-0d40-4187-b4a7-4c2f2cbaa2a8",
     "is_grounded": true
   },
   {
@@ -1672,8 +1672,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0938,
-    "decision_id": "2035008b-6e23-4cd0-a44e-bb28dfccdea8",
+    "latency_seconds": 0.0876,
+    "decision_id": "b6bc9e6a-324c-40ec-b095-ec983762340c",
     "is_grounded": true
   },
   {
@@ -1700,8 +1700,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0782,
-    "decision_id": "596297d9-ccdd-4ab4-a36b-8f3d48ef98d9",
+    "latency_seconds": 0.0529,
+    "decision_id": "2fa324f0-3693-4744-a40d-d823fcbf6b97",
     "is_grounded": true
   },
   {
@@ -1742,8 +1742,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.012,
-    "decision_id": "69c605bf-e6ee-4aa7-a9f4-d92fb2c5b231",
+    "latency_seconds": 0.0,
+    "decision_id": "ac5732ec-b2b2-4490-bd4e-77aed65e162e",
     "is_grounded": false
   },
   {
@@ -1784,8 +1784,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.076,
-    "decision_id": "7cb498fd-9b9d-406f-b986-083fee18d11e",
+    "latency_seconds": 0.05,
+    "decision_id": "b0026b02-0137-46f5-a8d0-e5f54e73b589",
     "is_grounded": false
   },
   {
@@ -1812,8 +1812,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0781,
-    "decision_id": "4bb17a27-ce9a-45c9-a8f8-ad63b46188e1",
+    "latency_seconds": 0.05,
+    "decision_id": "5a63f41b-cc81-4642-b0d0-56c220086cf9",
     "is_grounded": true
   },
   {
@@ -1840,8 +1840,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0156,
-    "decision_id": "f2f820b0-a5a5-4692-96cd-c76f47b187c2",
+    "latency_seconds": 0.0,
+    "decision_id": "e51fc8fc-7768-4975-b587-9843691ef301",
     "is_grounded": true
   },
   {
@@ -1868,8 +1868,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0085,
-    "decision_id": "c50306b2-414e-458e-a385-f56af10a4914",
+    "latency_seconds": 0.0027,
+    "decision_id": "0ae5a017-dfba-4fed-b50e-a0124b0bfa02",
     "is_grounded": true
   },
   {
@@ -1896,8 +1896,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0794,
-    "decision_id": "d174a168-99ab-4c36-8fb2-844337deb569",
+    "latency_seconds": 0.0493,
+    "decision_id": "1dfea86c-5615-4707-9dd3-34006ff7b7e8",
     "is_grounded": true
   },
   {
@@ -1922,8 +1922,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0471,
-    "decision_id": "6f6ef5be-ddd5-4475-af16-02eea1f3e2c5",
+    "latency_seconds": 0.0473,
+    "decision_id": "89444c91-771a-4bc5-be3f-6d37ab345211",
     "is_grounded": true
   },
   {
@@ -1950,8 +1950,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.055,
-    "decision_id": "a5646976-46df-4ddd-86bb-ca7316e91396",
+    "latency_seconds": 0.0667,
+    "decision_id": "079164ea-8aa8-459c-b5ed-c0488c814267",
     "is_grounded": true
   },
   {
@@ -1979,7 +1979,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "835c0bc0-e7b3-4fde-8c7b-94e2c32922b0",
+    "decision_id": "132e42f1-a9b9-4de0-9adf-bec0b312720f",
     "is_grounded": true
   },
   {
@@ -2006,8 +2006,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0782,
-    "decision_id": "32a6d5ca-4602-463c-a77a-5847c9378927",
+    "latency_seconds": 0.0515,
+    "decision_id": "52843b5a-9d7c-4975-ae44-bf635d0322a2",
     "is_grounded": true
   },
   {
@@ -2035,7 +2035,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "8f761446-7d1c-49e7-b849-6af5aa9a172b",
+    "decision_id": "a02df0a3-83a7-4122-8229-ebf0d03ebb06",
     "is_grounded": true
   },
   {
@@ -2062,7 +2062,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "1d855b19-d1b4-4947-ac64-9d94186ed97c",
+    "decision_id": "5e3095fe-c5d6-4713-91de-c4232d23774a",
     "is_grounded": true
   },
   {
@@ -2104,7 +2104,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "29f9298f-b7ea-4709-b6e5-94ee5e0573f8",
+    "decision_id": "f75e3651-d040-412b-8a86-8bb5f2904612",
     "is_grounded": false
   },
   {
@@ -2145,8 +2145,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0703,
-    "decision_id": "5b58bd39-aa5b-49ed-8c8d-5e7a7431f736",
+    "latency_seconds": 0.0469,
+    "decision_id": "d3eb0924-e149-4d69-824c-584e656f030e",
     "is_grounded": false
   },
   {
@@ -2185,8 +2185,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0486,
-    "decision_id": "a07bdfdc-c6a4-49b5-b314-659ddb1ff167",
+    "latency_seconds": 0.059,
+    "decision_id": "fb811b86-8a5a-4c9b-a64e-33469f0fa76f",
     "is_grounded": false
   },
   {
@@ -2225,8 +2225,8 @@
       "pii": "pass",
       "injection": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "c34471ab-7ffb-42f6-9ca8-552e0403a577",
+    "latency_seconds": 0.0654,
+    "decision_id": "ee2e683b-8e04-42ef-bd00-7a6a496a5f7b",
     "is_grounded": false
   },
   {
@@ -2253,8 +2253,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "44b3f706-81cd-4310-8f84-db423e028580",
+    "latency_seconds": 0.0034,
+    "decision_id": "70f9d9fc-127f-4c4d-864d-5c57b06c8742",
     "is_grounded": true
   },
   {
@@ -2281,8 +2281,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "085e165b-ff78-44f5-b713-4974138cb788",
+    "latency_seconds": 0.0553,
+    "decision_id": "c2e3bec2-ac4b-40d6-a5ab-3c4a64a6abd2",
     "is_grounded": true
   },
   {
@@ -2309,8 +2309,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0395,
-    "decision_id": "0cb7830a-5e40-4944-ad9a-9be3397364ef",
+    "latency_seconds": 0.0542,
+    "decision_id": "7c84f315-ad20-497f-81c0-90a0c051065f",
     "is_grounded": true
   },
   {
@@ -2351,8 +2351,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0469,
-    "decision_id": "c240036c-ee89-4967-b3cf-165233725943",
+    "latency_seconds": 0.0555,
+    "decision_id": "9574f25b-f895-4cd0-98c4-e0af03bdeeb6",
     "is_grounded": false
   },
   {
@@ -2393,8 +2393,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0874,
-    "decision_id": "bc0644ab-0266-456f-b3cb-ffe5597f59b5",
+    "latency_seconds": 0.0511,
+    "decision_id": "770879d2-cebd-4ec9-936c-ce186013dcb8",
     "is_grounded": false
   },
   {
@@ -2421,8 +2421,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0723,
-    "decision_id": "d86a654d-5156-4378-9be1-29cc5ef29acb",
+    "latency_seconds": 0.0488,
+    "decision_id": "af0ab7cf-219c-4845-bc67-9b9e5d52a769",
     "is_grounded": true
   },
   {
@@ -2449,8 +2449,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0626,
-    "decision_id": "271a32c7-49bc-4280-8a16-e81bb6b82e67",
+    "latency_seconds": 0.0472,
+    "decision_id": "eac1ce11-95e8-4a1a-843e-f93e03906952",
     "is_grounded": true
   },
   {
@@ -2492,7 +2492,7 @@
       "grounding": "pass"
     },
     "latency_seconds": 0.0,
-    "decision_id": "5de27299-b345-41d3-8881-7acedcb03976",
+    "decision_id": "9531baa9-adf9-4678-a882-ddf29df41876",
     "is_grounded": false
   },
   {
@@ -2533,8 +2533,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0156,
-    "decision_id": "f6a032c4-9e2a-4e67-bdae-0165ea2696f1",
+    "latency_seconds": 0.0165,
+    "decision_id": "1b539c08-7749-44c4-aca4-2230624fa477",
     "is_grounded": false
   },
   {
@@ -2561,8 +2561,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0399,
-    "decision_id": "83427585-b20d-42c1-b0b0-fb6f80303d31",
+    "latency_seconds": 0.0469,
+    "decision_id": "a54088d1-3efb-49af-b08e-be7de00ad4da",
     "is_grounded": true
   },
   {
@@ -2603,8 +2603,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0,
-    "decision_id": "f3d7c0f9-dbdc-49aa-ac55-33b899895fff",
+    "latency_seconds": 0.0041,
+    "decision_id": "ff7865ea-6f72-4cd4-8aae-4372266412da",
     "is_grounded": false
   },
   {
@@ -2631,8 +2631,8 @@
       "unsupported_claim": "pass",
       "grounding": "pass"
     },
-    "latency_seconds": 0.0626,
-    "decision_id": "f3177701-f6c1-418b-bc8d-c40e371500eb",
+    "latency_seconds": 0.0444,
+    "decision_id": "d6514e09-f703-4f57-aaf6-d5185aac6b63",
     "is_grounded": true
   }
 ]
