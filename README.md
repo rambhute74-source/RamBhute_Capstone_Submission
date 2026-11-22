@@ -15,8 +15,8 @@ Built to address support queue bottlenecks, eliminate avoidable escalations, ens
 
 ```bash
 # 1. Clone the repository and enter the project folder
-git clone https://github.com/rambhute74-source/RamBhute_Capstone_Submission.git
-cd RamBhute_Capstone_Submission
+(git clone https://github.com/rambhute74-source/05_SourceCode.git
+cd 05_SourceCode)
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
