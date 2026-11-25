@@ -1,39 +1,39 @@
 {
   "metadata": {
-    "evaluation_date": "2026-11-22T06:12:28.082260+00:00",
-    "input_file": "C:\\Users\\user\\Desktop\\CloudeVerseProject\\data\\validation_tickets.json",
+    "evaluation_date": "2026-11-24T12:51:09.730395+00:00",
+    "input_file": "C:\\Users\\user\\Desktop\\CloudeVerseProject\\data\\development_tickets.json",
     "output_directory": "C:\\Users\\user\\Desktop\\CloudeVerseProject\\evaluation\\results",
-    "run_duration_seconds": 5.88
+    "run_duration_seconds": 8.85
   },
   "volume": {
-    "total_tickets": 80,
-    "answered_automatically": 46,
-    "escalated": 34,
+    "total_tickets": 500,
+    "answered_automatically": 351,
+    "escalated": 149,
     "blocked_by_guardrails": 0
   },
   "business": {
-    "first_contact_resolution_rate": 57.5,
-    "escalation_rate": 42.5,
-    "mean_response_time_seconds": 0.0534,
-    "median_response_time_seconds": 0.0494,
-    "baseline_fcr_comparison": "42% (CloudServe baseline) -> 57.5% (Achieved)"
+    "first_contact_resolution_rate": 70.2,
+    "escalation_rate": 29.8,
+    "mean_response_time_seconds": 0.0051,
+    "median_response_time_seconds": 0.005,
+    "baseline_fcr_comparison": "42% (CloudServe baseline) -> 70.2% (Achieved)"
   },
   "technical": {
     "intent_classification_accuracy": 100.0,
-    "retrieval_hit_rate": 90.57,
-    "citation_accuracy": 85.71,
+    "retrieval_hit_rate": 91.6,
+    "citation_accuracy": 90.22,
     "hallucination_rate_pct": 0.0,
     "latency": {
-      "mean_seconds": 0.0534,
-      "median_seconds": 0.0494,
-      "p95_seconds": 0.1167
+      "mean_seconds": 0.0051,
+      "median_seconds": 0.005,
+      "p95_seconds": 0.008
     }
   },
   "governance": {
     "decisions_reconciliation": {
-      "tickets_submitted": 80,
-      "unique_logged_tickets": 80,
-      "total_decisions_logged": 80,
+      "tickets_submitted": 500,
+      "unique_logged_tickets": 500,
+      "total_decisions_logged": 500,
       "missing_count": 0,
       "missing_ticket_ids": [],
       "reconciles_cleanly": true
@@ -47,32 +47,25 @@
     },
     "confidence_calibration": [
       {
-        "band": "0.2-0.4",
-        "count": 1,
-        "stated_confidence": 0.3642,
-        "observed_accuracy": 1.0,
-        "difference": -0.6358
-      },
-      {
         "band": "0.4-0.6",
-        "count": 1,
-        "stated_confidence": 0.5713,
+        "count": 2,
+        "stated_confidence": 0.5021,
         "observed_accuracy": 1.0,
-        "difference": -0.4287
+        "difference": -0.4979
       },
       {
         "band": "0.6-0.8",
-        "count": 3,
-        "stated_confidence": 0.7775,
+        "count": 8,
+        "stated_confidence": 0.7538,
         "observed_accuracy": 1.0,
-        "difference": -0.2225
+        "difference": -0.2462
       },
       {
         "band": "0.8-1.0",
-        "count": 75,
-        "stated_confidence": 0.8575,
+        "count": 490,
+        "stated_confidence": 0.8593,
         "observed_accuracy": 1.0,
-        "difference": -0.1425
+        "difference": -0.1407
       }
     ]
   },
@@ -80,64 +73,64 @@
     {
       "dimension": "customer_tier",
       "segment": "business",
-      "ticket_count": 30,
-      "auto_respond_rate": 60.0,
+      "ticket_count": 164,
+      "auto_respond_rate": 67.07,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_tier",
       "segment": "enterprise",
-      "ticket_count": 8,
-      "auto_respond_rate": 62.5,
+      "ticket_count": 83,
+      "auto_respond_rate": 73.49,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_tier",
       "segment": "standard",
-      "ticket_count": 42,
-      "auto_respond_rate": 54.76,
+      "ticket_count": 253,
+      "auto_respond_rate": 71.15,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_region",
       "segment": "asia_pacific",
-      "ticket_count": 21,
-      "auto_respond_rate": 71.43,
+      "ticket_count": 119,
+      "auto_respond_rate": 68.07,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_region",
       "segment": "europe",
-      "ticket_count": 25,
-      "auto_respond_rate": 60.0,
+      "ticket_count": 151,
+      "auto_respond_rate": 72.19,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_region",
       "segment": "latin_america",
-      "ticket_count": 7,
-      "auto_respond_rate": 28.57,
+      "ticket_count": 60,
+      "auto_respond_rate": 71.67,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "customer_region",
       "segment": "north_america",
-      "ticket_count": 27,
-      "auto_respond_rate": 51.85,
+      "ticket_count": 170,
+      "auto_respond_rate": 69.41,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "language_fluency",
       "segment": "fluent",
-      "ticket_count": 61,
-      "auto_respond_rate": 59.02,
+      "ticket_count": 380,
+      "auto_respond_rate": 72.37,
       "classification_accuracy": 100.0
     },
     {
       "dimension": "language_fluency",
       "segment": "non_fluent",
-      "ticket_count": 19,
-      "auto_respond_rate": 52.63,
+      "ticket_count": 120,
+      "auto_respond_rate": 63.33,
       "classification_accuracy": 100.0
     }
   ]

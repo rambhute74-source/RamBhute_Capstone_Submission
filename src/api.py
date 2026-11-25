@@ -7,6 +7,7 @@ health monitoring, and operational metrics.
 
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
+import json
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query, Response
@@ -105,5 +106,44 @@ def get_prometheus_metrics():
 
 
 if __name__ == "__main__":
+    import argparse
+    import time
     import uvicorn
-    uvicorn.run("src.api:app", host="0.0.0.0", port=8000, reload=False)
+
+    parser = argparse.ArgumentParser(description="CloudServe API Server & Test Payload Runner")
+    parser.add_argument("--test-payload", type=str, help="Path to ticket JSON file to process directly via CLI")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="API server host")
+    parser.add_argument("--port", type=int, default=8000, help="API server port")
+    args = parser.parse_args()
+
+    if args.test_payload:
+        with open(args.test_payload, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        p = SupportPipeline()
+        start = time.time()
+        res = p.process_ticket(payload)
+        elapsed = time.time() - start
+        print(f"\n[CloudServe CLI Runner] Processed '{args.test_payload}' in {elapsed:.3f}s")
+        print("=" * 65)
+        print(f"Ticket ID:        {res.ticket_id}")
+        print(f"Predicted Intent: {res.predicted_intent} (Confidence: {res.intent_confidence:.2f})")
+        print(f"Urgency:          {res.urgency}")
+        print(f"Assigned Action:  {res.action_taken}")
+        print(f"Decision Reason:  {res.reason}")
+        print(f"Sources Cited:    {res.sources_cited}")
+        print(f"Guardrail Checks: {res.guardrail_results}")
+        if res.draft_response:
+            print("\nGenerated Draft Response:")
+            print("-" * 65)
+            print(res.draft_response)
+            print("-" * 65)
+        if res.escalation_brief:
+            print("\nTier 2 Escalation Brief (PR-05):")
+            print("-" * 65)
+            print(f"Summary:       {res.escalation_brief.summary}")
+            print(f"Urgency:       {res.escalation_brief.urgency}")
+            print(f"Actions Done:  {res.escalation_brief.checks_attempted}")
+            print(f"Reason:        {res.escalation_brief.escalation_reason}")
+            print("-" * 65)
+    else:
+        uvicorn.run("src.api:app", host=args.host, port=args.port, reload=False)
